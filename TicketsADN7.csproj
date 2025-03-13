@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="BL\**" />
+    <Compile Remove="EMAILSERVICES\**" />
+    <Compile Remove="INTELISIS.APPCORE.BL\**" />
+    <Compile Remove="INTELISIS.APPCORE.DL\**" />
+    <Compile Remove="INTELISIS.APPCORE.EL\**" />
+    <Compile Remove="LIBRARY.COMMON\**" />
+    <Compile Remove="WHATSAPPSERVICES\**" />
+    <Content Remove="BL\**" />
+    <Content Remove="EMAILSERVICES\**" />
+    <Content Remove="INTELISIS.APPCORE.BL\**" />
+    <Content Remove="INTELISIS.APPCORE.DL\**" />
+    <Content Remove="INTELISIS.APPCORE.EL\**" />
+    <Content Remove="LIBRARY.COMMON\**" />
+    <Content Remove="WHATSAPPSERVICES\**" />
+    <EmbeddedResource Remove="BL\**" />
+    <EmbeddedResource Remove="EMAILSERVICES\**" />
+    <EmbeddedResource Remove="INTELISIS.APPCORE.BL\**" />
+    <EmbeddedResource Remove="INTELISIS.APPCORE.DL\**" />
+    <EmbeddedResource Remove="INTELISIS.APPCORE.EL\**" />
+    <EmbeddedResource Remove="LIBRARY.COMMON\**" />
+    <EmbeddedResource Remove="WHATSAPPSERVICES\**" />
+    <None Remove="BL\**" />
+    <None Remove="EMAILSERVICES\**" />
+    <None Remove="INTELISIS.APPCORE.BL\**" />
+    <None Remove="INTELISIS.APPCORE.DL\**" />
+    <None Remove="INTELISIS.APPCORE.EL\**" />
+    <None Remove="LIBRARY.COMMON\**" />
+    <None Remove="WHATSAPPSERVICES\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.104.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.14" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.3" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.6.1" />
+    <PackageReference Include="MimeKit" Version="4.11.0" />
+    <PackageReference Include="RestSharp" Version="112.1.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="INTELISIS.APPCORE.BL\INTELISIS.APPCORE.BL.csproj" />
+    <ProjectReference Include="WHATSAPPSERVICES\WHATSAPPSERVICES.csproj" />
+  </ItemGroup>
+
+</Project>
