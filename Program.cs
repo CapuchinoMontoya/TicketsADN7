@@ -1,4 +1,3 @@
-using INTELISIS.APPCORE.BL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -6,8 +5,9 @@ using System.Net;
 using System.Text;
 using TicketsADN7.Services;
 using TicketsADN7.Models;
-using WHATSAPPSERVICES;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using WHATSAPPSERVICES;
+using INTELISIS.APPCORE.BL;
 
 var builder = WebApplication.CreateBuilder(args);
 

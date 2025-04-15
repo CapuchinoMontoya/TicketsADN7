@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\LIBRARY.COMMON\LIBRARY.COMMON\LIBRARY.COMMON.csproj" />
+    <ProjectReference Include="..\LIBRARY.COMMON\LIBRARY.COMMON.csproj" />
     <ProjectReference Include="..\INTELISIS.APPCORE.EL\INTELISIS.APPCORE.EL.csproj" />
   </ItemGroup>
 

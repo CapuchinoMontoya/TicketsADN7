@@ -1,4 +1,6 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using INTELISIS.APPCORE.BL;
+using INTELISIS.APPCORE.EL;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -13,6 +15,29 @@ namespace TicketsADN7.Services
         public AuthService(IConfiguration configuration)
         {
             _configuration = configuration;
+        }
+
+        public async Task<LoginResponse?> LoginAsync(LoginModel loginModel)
+        {
+            if (!string.IsNullOrEmpty(loginModel.username) && !string.IsNullOrEmpty(loginModel.password))
+            {
+                Usuario result = UsuarioBusiness.IniciarSesion(loginModel);
+
+                if (result.Resultado != "Error")
+                {
+                    return new LoginResponse
+                    {
+                        Usuario = result,
+                        Token = GenerateJwtToken(result.NombreUsuario)
+                    };
+                }
+                return new LoginResponse
+                {
+                    Usuario = result,
+                    Token = null
+                };
+            }
+            return null;
         }
 
         public string? GenerateJwtToken(string username)
@@ -30,22 +55,10 @@ namespace TicketsADN7.Services
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(60),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        public async Task<string?> LoginAsync(LoginModel loginModel)
-        {
-            // Aquí deberías validar el usuario y la contraseña en tu base de datos
-            // Por simplicidad, asumimos que el login es válido si el usuario y la contraseña no están vacíos
-            if (!string.IsNullOrEmpty(loginModel.username) && !string.IsNullOrEmpty(loginModel.password))
-            {
-                return GenerateJwtToken(loginModel.username);
-            }
-
-            return null;
         }
     }
 }

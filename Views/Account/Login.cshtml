@@ -1,4 +1,4 @@
-﻿@model TicketsADN7.Models.LoginModel
+﻿@model INTELISIS.APPCORE.EL.LoginModel
 
 @{
     ViewData["Title"] = "Iniciar Sesion";
@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Megavet - Portal Login</title>
+    <title>Tickets - Portal Login</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -28,6 +28,7 @@
     <link href="~/lib/quill/quill.bubble.css" rel="stylesheet">
     <link href="~/lib/remixicon/remixicon.css" rel="stylesheet">
     <link href="~/lib/simple-datatables/style.css" rel="stylesheet">
+    <link href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
 
     <!-- Template Main CSS File -->
     <link href="~/css/style.css" rel="stylesheet">
@@ -41,7 +42,7 @@
                 <div class="d-flex justify-content-center py-4">
                     <a class="logo d-flex align-items-center w-auto">
                         <img src="~/img/logo.png" alt="Logo">
-                        <span class="d-none d-lg-block">Megavet</span>
+                        <span class="d-none d-lg-block">ADN7</span>
                     </a>
                 </div>
 
@@ -51,12 +52,12 @@
 
                         <div class="pt-4 pb-2">
                             <h5 class="card-title text-center pb-0 fs-4">Iniciar Sesion</h5>
-                            <p class="text-center small">Introduzca su nombre de agente y contraseña para iniciar sesión</p>
+                            <p class="text-center small">Introduzca su nombre de usuario y contraseña para iniciar sesión</p>
                         </div>
                         <form asp-action="Login" method="post" class="row g-3 needs-validation">
 
                             <div class="col-12">
-                                <label for="yourUsername" class="form-label">Agente</label>
+                                <label for="yourUsername" class="form-label">Usuario</label>
                                 <div class="input-group has-validation">
                                     <span class="input-group-text" id="inputGroupPrepend">@@</span>
                                     <input asp-for="username" type="text" name="username" class="form-control" id="yourUsername" required>
@@ -88,7 +89,7 @@
                 </div>
 
                 <div class="credits">
-                    Designed by <a href="https://megavet.com.mx/">Megavet</a>
+                    Designed by <a href="#">ADN7</a>
                 </div>
 
             </div>
@@ -104,6 +105,16 @@
 <script src="~/lib/quill/quill.js"></script>
 <script src="~/lib/simple-datatables/simple-datatables.js"></script>
 <script src="~/lib/tinymce/tinymce.min.js"></script>
+<script src="~/lib/toastr.js/toastr.min.js"></script>
 
 <!-- Template Main JS File -->
 <script src="~/js/main.js"></script>
+
+@if (ViewBag.Mensaje != null)
+{
+    <script>
+        $(document).ready(function () {
+            toastr.error("@ViewBag.Mensaje");
+        });
+    </script>
+}
