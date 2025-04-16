@@ -41,8 +41,10 @@ namespace INTELISIS.APPCORE.EL
         public string Telefono { get; set; }
 
         //Retorno del sp_Tickets_IniciarSesion
-        public string Resultado { get; set; }
-        public string Mensaje { get; set; }
+        [NotMapped]
+        public string? Resultado { get; set; }
+        [NotMapped]
+        public string? Mensaje { get; set; }
 
         // Propiedades de navegación
         public virtual Rol Rol { get; set; }
