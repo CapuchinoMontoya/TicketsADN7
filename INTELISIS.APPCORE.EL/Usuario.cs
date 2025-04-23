@@ -37,7 +37,7 @@ namespace INTELISIS.APPCORE.EL
         [Required]
         public bool Activo { get; set; } = true;
 
-        [StringLength(20, ErrorMessage = "El teléfono no puede exceder 20 caracteres")]
+        [StringLength(20, ErrorMessage = "El teléfono no puede exceder 10 caracteres")]
         public string Telefono { get; set; }
 
         //Retorno del sp_Tickets_IniciarSesion
