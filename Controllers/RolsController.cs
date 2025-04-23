@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using INTELISIS.APPCORE.EL;
 using TicketsADN7.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TicketsADN7.Controllers
 {
+    [Authorize]
     public class RolsController : Controller
     {
         private readonly TicketsContext _context;
