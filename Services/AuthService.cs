@@ -1,4 +1,5 @@
-﻿using INTELISIS.APPCORE.BL;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using INTELISIS.APPCORE.BL;
 using INTELISIS.APPCORE.EL;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -28,7 +29,7 @@ namespace TicketsADN7.Services
                     return new LoginResponse
                     {
                         Usuario = result,
-                        Token = GenerateJwtToken(result.NombreUsuario)
+                        Token = GenerateJwtToken(result.NombreUsuario, result.RolID)
                     };
                 }
                 return new LoginResponse
@@ -40,7 +41,7 @@ namespace TicketsADN7.Services
             return null;
         }
 
-        public string? GenerateJwtToken(string username)
+        public string? GenerateJwtToken(string username, int rol)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -48,6 +49,7 @@ namespace TicketsADN7.Services
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, username),
+                new Claim(ClaimTypes.Role, rol.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

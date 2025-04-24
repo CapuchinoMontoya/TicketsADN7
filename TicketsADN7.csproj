@@ -56,8 +56,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="EMAILSERVICES\EMAILSERVICES.csproj" />
     <ProjectReference Include="INTELISIS.APPCORE.BL\INTELISIS.APPCORE.BL.csproj" />
     <ProjectReference Include="WHATSAPPSERVICES\WHATSAPPSERVICES.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Components\" />
   </ItemGroup>
 
 </Project>

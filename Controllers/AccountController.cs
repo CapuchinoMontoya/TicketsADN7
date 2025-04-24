@@ -34,6 +34,7 @@ namespace TicketsADN7.Controllers
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, result.Usuario.NombreUsuario),
+                    new Claim(ClaimTypes.Role, result.Usuario.RolID.ToString()),
                     new Claim("Token", result.Token)
                 };
 

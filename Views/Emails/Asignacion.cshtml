@@ -1,0 +1,25 @@
+﻿
+@model INTELISIS.APPCORE.EL.CorreoGenerico
+@{
+    Layout = "~/Views/Shared/EmailLayout.cshtml";
+}
+
+<div style="max-width: 600px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; border: 1px solid #e0e0e0; border-radius: 10px; overflow: hidden; background-color: #ffffff;">
+    <div style="background-color: @Model.ColorFondo; padding: 20px; text-align: center; color: white;">
+        <h2 style="margin: 0;">@Model.Titulo</h2>
+    </div>
+
+    <div style="padding: 30px; color: #333;">
+        <p style="font-size: 16px;">Hola <strong>@Model.NombreUsuario</strong>,</p>
+        <p style="font-size: 15px; line-height: 1.6;">
+            @Model.Mensaje
+        </p>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="@Model.Url"
+               style="background-color: @Model.ColorFondo; color: #fff; padding: 12px 24px; font-size: 15px; border-radius: 6px; text-decoration: none; display: inline-block;">
+                @Model.TextoBoton
+            </a>
+        </div>
+    </div>
+</div>

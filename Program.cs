@@ -48,6 +48,8 @@ builder.Services.AddHttpClient();
 
 //Dependencias
 builder.Services.AddScoped<IWhatsAppSender, WhatsAppSender>();
+builder.Services.AddScoped<IViewRenderService, ViewRenderService>();
+
 var app = builder.Build();
 
 

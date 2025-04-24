@@ -1,0 +1,162 @@
+﻿@model IEnumerable<INTELISIS.APPCORE.EL.Ticket>
+
+@{
+    ViewData["Title"] = "Gestionar Tickets";
+}
+
+<h1>Gestionar Tickets</h1>
+
+<!-- Modal para Aprobar/Asignar Ticket -->
+<div class="modal fade" id="asignarTicketModal" tabindex="-1" role="dialog" aria-labelledby="asignarTicketModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="asignarTicketModalLabel">Asignar Ticket</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="AsignarTicket" method="post">
+                <div class="modal-body">
+                    <input type="hidden" id="ticketId" name="ticketId" />
+
+                    <div class="form-group">
+                        <label for="usuarioAsignadoId">Asignar a:</label>
+                        <select id="usuarioAsignadoId" name="usuarioAsignadoId" class="form-control" asp-items="ViewBag.UsuarioAsignadoID"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prioridadId">Prioridad:</label>
+                        <select id="prioridadId" name="prioridadId" class="form-control" asp-items="ViewBag.PrioridadID"></select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Asignar Ticket</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Titulo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RutaArchivo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaCreacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Categoria)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Prioridad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UsuarioReporte)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Departamento)
+            </th>
+            <th>
+                Aprobar/Asignar
+            </th>
+            <th>
+                Rechazar
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Titulo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RutaArchivo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaCreacion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Categoria.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Prioridad.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estado.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UsuarioReporte.NombreUsuario)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Departamento.NombreDepartamento)
+                </td>
+                @if (item.EstadoID == 1)
+                {
+                    <td>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#asignarTicketModal"
+                                data-ticketid="@item.TicketID" data-prioridad="@item.PrioridadID">
+                            Asignar
+                        </button>
+                    </td>
+                    <td>
+                        <form asp-controller="Tickets" asp-action="RechazarTicket" method="post" style="display:inline;">
+                            <input type="hidden" name="ticketId" value="@item.TicketID" />
+                            <button type="submit" class="btn btn-danger">Rechazar</button>
+                        </form>
+                    </td>
+                }
+                else if (item.EstadoID == 4 || item.EstadoID == 3)
+                {
+                    <td>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#asignarTicketModal"
+                                data-ticketid="@item.TicketID" data-prioridad="@item.PrioridadID">
+                            Reasignar
+                        </button>
+                    </td>
+                    <td>
+                        <form asp-controller="Tickets" asp-action="FinalizarTicket" method="post" style="display:inline;">
+                            <input type="hidden" name="ticketId" value="@item.TicketID" />
+                            <button type="submit" class="btn btn-success">Liberar</button>
+                        </form>
+                    </td>
+                }
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function() {
+            $('#asignarTicketModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Botón que activó el modal
+                var ticketId = button.data('ticketid'); // Extraer info de data-* attributes
+                var prioridadActual = button.data('prioridad');
+
+                var modal = $(this);
+                modal.find('#ticketId').val(ticketId);
+                modal.find('#prioridad').val(prioridadActual);
+            });
+        });
+    </script>
+}
