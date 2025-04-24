@@ -56,4 +56,11 @@ public partial class TicketsContext : DbContext
 public DbSet<INTELISIS.APPCORE.EL.Rol> Rol { get; set; } = default!;
 
 public DbSet<INTELISIS.APPCORE.EL.Departamento> Departamento { get; set; } = default!;
+public DbSet<INTELISIS.APPCORE.EL.CategoriaTicket> CategoriaTicket { get; set; } = default!;
+
+public DbSet<INTELISIS.APPCORE.EL.EstadoTicket> EstadoTicket { get; set; } = default!;
+
+public DbSet<INTELISIS.APPCORE.EL.Prioridad> Prioridad { get; set; } = default!;
+
+public DbSet<INTELISIS.APPCORE.EL.Ticket> Ticket { get; set; } = default!;
 }

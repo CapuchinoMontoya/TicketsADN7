@@ -1,0 +1,17 @@
+﻿@if (TempData["ToastrMessage"] != null)
+{
+    @if (TempData["ToastrType"] != null)
+    {
+        <script src="~/lib/toastr.js/toastr.min.js"></script>
+        <script>
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "5000",
+                "escapeHtml": false // Asegúrate de desactivar el escape
+            };
+            toastr['@TempData["ToastrType"]']('@Html.Raw(TempData["ToastrMessage"])');
+        </script>
+    }
+}

@@ -1,0 +1,111 @@
+﻿@model IEnumerable<INTELISIS.APPCORE.EL.Ticket>
+
+@{
+    ViewData["Title"] = "MisTicketsAsigandos";
+}
+
+<h1>MisTicketsAsigandos</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Titulo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RutaArchivo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaCreacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaCierre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Categoria)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Prioridad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UsuarioReporte)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UsuarioAsignado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Departamento)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Titulo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RutaArchivo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaCreacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaCierre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Categoria.Descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Prioridad.Descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Estado.Descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UsuarioReporte.Contrasena)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UsuarioAsignado.Contrasena)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Departamento.Descripcion)
+            </td>
+            <td>
+                @if(item.EstadoID != 3)
+                {
+                    <form asp-controller="Tickets" asp-action="EnEsperaTicket" method="post" style="display:inline;">
+                        <input type="hidden" name="ticketId" value="@item.TicketID" />
+                        <button type="submit" class="btn btn-info">En Espera</button>
+                    </form>
+                }else{
+                    <form asp-controller="Tickets" asp-action="EnProcesoTicket" method="post" style="display:inline;">
+                        <input type="hidden" name="ticketId" value="@item.TicketID" />
+                        <button type="submit" class="btn btn-info">En Proceso</button>
+                    </form>
+                }
+            </td>
+            <td>
+                <form asp-controller="Tickets" asp-action="ResueltoTicket" method="post" style="display:inline;">
+                    <input type="hidden" name="ticketId" value="@item.TicketID" />
+                    <button type="submit" class="btn btn-success">Finalizar</button>
+                </form>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

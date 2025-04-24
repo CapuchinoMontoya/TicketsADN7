@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+
+<!DOCTYPE html>
 <html lang="es-mx">
 <head>
     <meta charset="utf-8">
@@ -15,6 +17,8 @@
 
     <!-- Custom styles for this template-->
     <link href="~/css/sb-admin-2.min.css" rel="stylesheet">
+    <!-- Vendor CSS Files -->
+    <link href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
 </head>
 <body id="page-top">
     <!-- Page Wrapper -->
@@ -46,6 +50,9 @@
                         <a class="collapse-item" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
                         <a class="collapse-item" asp-controller="Departamentos" asp-action="Index">Departamentos</a>
                         <a class="collapse-item" asp-controller="Rols" asp-action="Index">Roles</a>
+                        <a class="collapse-item" asp-controller="CategoriaTickets" asp-action="Index">Categorias</a>
+                        <a class="collapse-item" asp-controller="EstadoTickets" asp-action="Index">Estados</a>
+                        <a class="collapse-item" asp-controller="Prioridads" asp-action="Index">Prioridades</a>
                     </div>
                 </div>
             </li>
@@ -62,7 +69,7 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Interface
+                Interfaz
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
@@ -70,13 +77,21 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                    aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>Components</span>
+                    <span>Tickets</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="buttons.html">Buttons</a>
-                        <a class="collapse-item" href="cards.html">Cards</a>
+                        <h6 class="collapse-header">Ticktes:</h6>
+                        @if (User.FindFirst(ClaimTypes.Role)?.Value == "1")
+                        {
+                            <a class="collapse-item" asp-controller="Tickets" asp-action="GestionarTickets">Gestionar Tickets</a>
+                            <a class="collapse-item" asp-controller="Tickets" asp-action="HistorialTickets">Historial Tickets</a>
+                        }
+                        
+                        <a class="collapse-item" asp-controller="Tickets" asp-action="MisTickets">Mis Tickets</a>
+                        <a class="collapse-item" asp-controller="Tickets" asp-action="MisTicketsAsigandos">Tickets Asignados</a>
+                        <a class="collapse-item" asp-controller="Tickets" asp-action="Create">Levantar Tickets</a>
+                        
                     </div>
                 </div>
             </li>
@@ -147,7 +162,7 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <!-- Topbar Search -->
+                    @* <!-- Topbar Search -->
                     <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
@@ -158,7 +173,7 @@
                                 </button>
                             </div>
                         </div>
-                    </form>
+                    </form> *@
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -373,14 +388,22 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-
+    
+    
     <!-- Bootstrap core JavaScript-->
     <script src="~/lib/vendor/jquery/jquery.min.js"></script>
+    
     <script src="~/lib/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Componente de las alertas -->
+    <script src="~/lib/toastr.js/toastr.min.js"></script>
+    <partial name="_Alerts" />
+    
 
     <!-- Core plugin JavaScript-->
     <script src="~/lib/vendor/jquery-easing/jquery.easing.min.js"></script>
 
+    
     <!-- Custom scripts for all pages-->
     <script src="~/js/sb-admin-2.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
