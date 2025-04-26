@@ -18,11 +18,11 @@ namespace WHATSAPPSERVICES
         }
 
         /// <summary>
-        /// Envía un mensaje de WhatsApp de manera síncrona.
+        /// Envía un mensaje de WhatsApp con documento de manera síncrona.
         /// </summary>
         /// <param name="message">El mensaje de WhatsApp que se enviará.</param>
         /// <returns>True si el mensaje se envió correctamente, False en caso contrario.</returns>
-        public bool SendWhatsAppMessage(WhatsAppMessage message)
+        public bool SendWhatsAppMessageDocument(WhatsAppMessage message)
         {
             var url = $"{_whatsAppConfig.BaseUrl}/messages/document";
             var client = new RestClient(url);
@@ -46,7 +46,7 @@ namespace WHATSAPPSERVICES
         }
 
         /// <summary>
-        /// Envía un mensaje de WhatsApp de manera asíncrona.
+        /// Envía un mensaje de WhatsApp con documento de manera asíncrona.
         /// </summary>
         /// <param name="message">El mensaje de WhatsApp que se enviará.</param>
         /// <returns>True si el mensaje se envió correctamente, False en caso contrario.</returns>
@@ -69,6 +69,32 @@ namespace WHATSAPPSERVICES
 
             request.AddParameter("application/json", JsonSerializer.Serialize(body), ParameterType.RequestBody);
             RestResponse response = await client.ExecuteAsync(request);
+
+            return ProcessResponse(response);
+        }
+
+        /// <summary>
+        /// Envía un mensaje de WhatsApp de manera síncrona.
+        /// </summary>
+        /// <param name="message">El mensaje de WhatsApp que se enviará.</param>
+        /// <returns>True si el mensaje se envió correctamente, False en caso contrario.</returns>
+        public bool SendWhatsAppMessage(WhatsAppMessage message)
+        {
+            var url = $"{_whatsAppConfig.BaseUrl}/messages/chat";
+            var client = new RestClient(url);
+
+            var request = new RestRequest(url, Method.Post);
+            request.AddHeader("content-type", "application/json");
+
+            var body = new
+            {
+                token = _whatsAppConfig.Token,
+                to = message.To,
+                body = message.Body
+            };
+
+            request.AddParameter("application/json", JsonSerializer.Serialize(body), ParameterType.RequestBody);
+            RestResponse response = client.Execute(request);
 
             return ProcessResponse(response);
         }

@@ -23,6 +23,11 @@
         public string Caption { get; set; }
 
         /// <summary>
+        /// Mensaje de texto.
+        /// </summary>
+        public string Body { get; set; }
+
+        /// <summary>
         /// Inicializa una nueva instancia de la clase <see cref="WhatsAppMessage"/>.
         /// </summary>
         /// <param name="to">Número de teléfono del destinatario.</param>
@@ -35,6 +40,17 @@
             FileName = fileName;
             Document = document;
             Caption = caption;
+        }
+
+        /// <summary>
+        /// Inicializa una nueva instancia de la clase <see cref="WhatsAppMessage"/>.
+        /// </summary>
+        /// <param name="to">Número de teléfono del destinatario.</param>
+        /// <param name="body">Nombre del archivo adjunto.</param>
+        public WhatsAppMessage(string to, string body)
+        {
+            To = to;
+            Body = body;
         }
     }
 }
