@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using INTELISIS.APPCORE.EL;
 using TicketsADN7.Models;
-using System.Security.Claims;
 using EmailService;
 using TicketsADN7.Services;
+using EMAILSERVICES;
+using Microsoft.Extensions.Options;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
+using WHATSAPPSERVICES;
 
 namespace TicketsADN7.Controllers
 {
@@ -18,12 +17,16 @@ namespace TicketsADN7.Controllers
         private readonly TicketsContext _context;
         private readonly ILogger<TicketsController> _logger;
         private readonly IViewRenderService _viewRenderService;
+        private readonly EmailConfiguration _emailConfig;
+        private readonly IWhatsAppSender _whatsAppSender;
 
-        public TicketsController(TicketsContext context, ILogger<TicketsController> logger, IViewRenderService viewRenderService)
+        public TicketsController(TicketsContext context, ILogger<TicketsController> logger, IViewRenderService viewRenderService, IOptions<EmailConfiguration> emailConfig, IWhatsAppSender whatsAppSender)
         {
             _context = context;
             _logger = logger;
             _viewRenderService = viewRenderService;
+            _emailConfig = emailConfig.Value;
+            _whatsAppSender = whatsAppSender;
         }
 
         // GET: Tickets
@@ -268,7 +271,7 @@ namespace TicketsADN7.Controllers
                 var usuarioAsignado = await _context.Usuario
                     .FirstOrDefaultAsync(t => t.UsuarioID == usuarioAsignadoId);
 
-
+                //Notificar por correo electronico
                 var model = new CorreoGenerico
                 {
                     NombreUsuario = usuarioAsignado.NombreCompleto,
@@ -281,11 +284,20 @@ namespace TicketsADN7.Controllers
 
                 string body = await _viewRenderService.RenderToStringAsync("Emails/Asignacion", model);
 
-                EnviarCorreo(
+                EmailHelper.EnviarCorreo(
+                    _emailConfig,
                     usuarioAsignado.Email,
-                    "Aprobación de Solicitud de Vehículo Utilitario",
+                    "Asigancion de tickets",
                     body
                 );
+
+                //Notificar por Whatsapp
+                var message = new WhatsAppMessage(
+                        to: usuarioAsignado.Telefono,
+                        body: "Se te ha asignado un nuevo ticket para su atención y seguimiento. Te invitamos a ingresar al sistema y revisar los detalles cuanto antes."
+                    );
+
+                bool result = _whatsAppSender.SendWhatsAppMessage(message);
 
                 return RedirectToAction(nameof(GestionarTickets));
             }
@@ -325,6 +337,38 @@ namespace TicketsADN7.Controllers
                 TempData["ToastrType"] = "success";
                 TempData["ToastrMessage"] = $"Ticket rechazado correctamente";
 
+                //Logica para mandar correo electronico
+                var usuarioAsignado = await _context.Usuario
+                    .FirstOrDefaultAsync(t => t.UsuarioID == ticket.UsuarioReporteID);
+
+                //Notificar por correo electronico
+                var model = new CorreoGenerico
+                {
+                    NombreUsuario = usuarioAsignado.NombreCompleto,
+                    Titulo = "Ticket Rechazado",
+                    Mensaje = "El ticket ha sido rechazado. Te invitamos a revisar los detalles en el sistema y tomar las acciones correspondientes si es necesario.",
+                    Url = "https://localhost:7210/Tickets/MisTickets",
+                    TextoBoton = "Ver Ticket Asignado",
+                    ColorFondo = "#007bff"
+                };
+
+                string body = await _viewRenderService.RenderToStringAsync("Emails/Asignacion", model);
+
+                EmailHelper.EnviarCorreo(
+                    _emailConfig,
+                    usuarioAsignado.Email,
+                    "Asigancion de tickets",
+                    body
+                );
+
+                //Notificar por Whatsapp
+                var message = new WhatsAppMessage(
+                        to: usuarioAsignado.Telefono,
+                        body: "El ticket ha sido rechazado. Te invitamos a revisar los detalles en el sistema y tomar las acciones correspondientes si es necesario."
+                    );
+
+                bool result = _whatsAppSender.SendWhatsAppMessage(message);
+
                 return RedirectToAction(nameof(GestionarTickets));
             }
             catch (Exception ex)
@@ -362,6 +406,38 @@ namespace TicketsADN7.Controllers
 
                 TempData["ToastrType"] = "success";
                 TempData["ToastrMessage"] = $"Ticket finalizado";
+
+                //Logica para mandar correo electronico
+                var usuarioAsignado = await _context.Usuario
+                    .FirstOrDefaultAsync(t => t.UsuarioID == ticket.UsuarioReporteID);
+
+                //Notificar por correo electronico
+                var model = new CorreoGenerico
+                {
+                    NombreUsuario = usuarioAsignado.NombreCompleto,
+                    Titulo = "Ticket finalizado",
+                    Mensaje = "El ticket ha sido cerrado exitosamente. Puedes consultar los detalles y el historial en el sistema para futuras referencias.",
+                    Url = "https://localhost:7210/Tickets/MisTickets",
+                    TextoBoton = "Ver Ticket Asignado",
+                    ColorFondo = "#007bff"
+                };
+
+                string body = await _viewRenderService.RenderToStringAsync("Emails/Asignacion", model);
+
+                EmailHelper.EnviarCorreo(
+                    _emailConfig,
+                    usuarioAsignado.Email,
+                    "Asigancion de tickets",
+                    body
+                );
+
+                //Notificar por Whatsapp
+                var message = new WhatsAppMessage(
+                        to: usuarioAsignado.Telefono,
+                        body: "El ticket ha sido cerrado exitosamente. Puedes consultar los detalles y el historial en el sistema para futuras referencias."
+                    );
+
+                bool result = _whatsAppSender.SendWhatsAppMessage(message);
 
                 return RedirectToAction(nameof(MisTicketsAsigandos));
             }
@@ -414,6 +490,38 @@ namespace TicketsADN7.Controllers
                 TempData["ToastrType"] = "info";
                 TempData["ToastrMessage"] = $"Ticket En Espera";
 
+                //Logica para mandar correo electronico
+                var usuarioAsignado = await _context.Usuario
+                    .FirstOrDefaultAsync(t => t.UsuarioID == ticket.UsuarioReporteID);
+
+                //Notificar por correo electronico
+                var model = new CorreoGenerico
+                {
+                    NombreUsuario = usuarioAsignado.NombreCompleto,
+                    Titulo = "Ticket En Espera",
+                    Mensaje = "El ticket se encuentra en pausa.",
+                    Url = "https://localhost:7210/Tickets/MisTickets",
+                    TextoBoton = "Ver Ticket Asignado",
+                    ColorFondo = "#007bff"
+                };
+
+                string body = await _viewRenderService.RenderToStringAsync("Emails/Asignacion", model);
+
+                EmailHelper.EnviarCorreo(
+                    _emailConfig,
+                    usuarioAsignado.Email,
+                    "Ticket En Espera",
+                    body
+                );
+
+                //Notificar por Whatsapp
+                var message = new WhatsAppMessage(
+                        to: usuarioAsignado.Telefono,
+                        body: "El ticket se encuentra en pausa."
+                    );
+
+                bool result = _whatsAppSender.SendWhatsAppMessage(message);
+
                 return RedirectToAction(nameof(MisTicketsAsigandos));
             }
             catch (Exception ex)
@@ -451,6 +559,38 @@ namespace TicketsADN7.Controllers
 
                 TempData["ToastrType"] = "success";
                 TempData["ToastrMessage"] = $"Ticket En Proceso";
+
+                //Logica para mandar correo electronico
+                var usuarioAsignado = await _context.Usuario
+                    .FirstOrDefaultAsync(t => t.UsuarioID == ticket.UsuarioReporteID);
+
+                //Notificar por correo electronico
+                var model = new CorreoGenerico
+                {
+                    NombreUsuario = usuarioAsignado.NombreCompleto,
+                    Titulo = "Ticket En Proceso",
+                    Mensaje = "El ticket está actualmente en proceso.",
+                    Url = "https://localhost:7210/Tickets/MisTickets",
+                    TextoBoton = "Ver Ticket Asignado",
+                    ColorFondo = "#007bff"
+                };
+
+                string body = await _viewRenderService.RenderToStringAsync("Emails/Asignacion", model);
+
+                EmailHelper.EnviarCorreo(
+                    _emailConfig,
+                    usuarioAsignado.Email,
+                    "Ticket En Proceso",
+                    body
+                );
+
+                //Notificar por Whatsapp
+                var message = new WhatsAppMessage(
+                        to: usuarioAsignado.Telefono,
+                        body: "El ticket está actualmente en proceso."
+                    );
+
+                bool result = _whatsAppSender.SendWhatsAppMessage(message);
 
                 return RedirectToAction(nameof(MisTicketsAsigandos));
             }
@@ -490,6 +630,38 @@ namespace TicketsADN7.Controllers
                 TempData["ToastrType"] = "success";
                 TempData["ToastrMessage"] = $"Ticket Resuelto";
 
+                //Logica para mandar correo electronico
+                var usuarioAsignado = await _context.Usuario
+                    .FirstOrDefaultAsync(t => t.UsuarioID == ticket.UsuarioReporteID);
+
+                //Notificar por correo electronico
+                var model = new CorreoGenerico
+                {
+                    NombreUsuario = usuarioAsignado.NombreCompleto,
+                    Titulo = "Ticket Resuelto",
+                    Mensaje = "El ticket ha sido resuelto y esta en espera de validacion.",
+                    Url = "https://localhost:7210/Tickets/MisTickets",
+                    TextoBoton = "Ver Ticket Asignado",
+                    ColorFondo = "#007bff"
+                };
+
+                string body = await _viewRenderService.RenderToStringAsync("Emails/Asignacion", model);
+
+                EmailHelper.EnviarCorreo(
+                    _emailConfig,
+                    usuarioAsignado.Email,
+                    "Ticket Resuelto",
+                    body
+                );
+
+                //Notificar por Whatsapp
+                var message = new WhatsAppMessage(
+                        to: usuarioAsignado.Telefono,
+                        body: "El ticket ha sido resuelto y esta en espera de validacion."
+                    );
+
+                bool result = _whatsAppSender.SendWhatsAppMessage(message);
+
                 return RedirectToAction(nameof(MisTicketsAsigandos));
             }
             catch (Exception ex)
@@ -508,35 +680,6 @@ namespace TicketsADN7.Controllers
         {
             var ticketsContext = _context.Ticket.Include(t => t.Categoria).Include(t => t.Departamento).Include(t => t.Estado).Include(t => t.Prioridad).Include(t => t.UsuarioAsignado).Include(t => t.UsuarioReporte);
             return View(await ticketsContext.ToListAsync());
-        }
-
-        public bool EnviarCorreo(string toCorreo, string asunto, string mensaje)
-        {
-            try
-            {
-                EmailSender _emailSender = new EmailSender(new EmailConfiguration()
-                {
-                    UserName = "alan.capuchino@megavet.com.mx",
-                    Password = @"AlanCma7",
-                    SmtpServer = "smtp-mail.outlook.com",
-                    Port = 587,
-                    From = "alan.capuchino@megavet.com.mx",
-                    FromName = "Tickets",
-                    CC = "alejocapuchinom@gmail.com",
-                });
-
-                var message = new Message(new List<string>()
-                        {toCorreo},
-                        asunto,
-                        mensaje);
-
-                _emailSender.SendEmailAsync(message).GetAwaiter().GetResult();
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
         }
     }
 }

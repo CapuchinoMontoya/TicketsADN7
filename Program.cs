@@ -8,6 +8,7 @@ using TicketsADN7.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using WHATSAPPSERVICES;
 using INTELISIS.APPCORE.BL;
+using EmailService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,9 @@ builder.Services.AddDbContext<TicketsContext>(option =>
 );
 // Registrar WhatsAppConfiguration desde appsettings.json
 builder.Services.Configure<WhatsAppConfiguration>(builder.Configuration.GetSection("WhatsAppConfiguration"));
+
+// Registrar EmailConfiguration desde appsettings.json
+builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailSettings"));
 
 // Configurar autenticación con cookies
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
