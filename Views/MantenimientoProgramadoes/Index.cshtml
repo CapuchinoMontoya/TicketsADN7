@@ -1,0 +1,120 @@
+﻿@{
+    ViewData["Title"] = "Calendario de Mantenimientos Programados";
+}
+
+<h1>Calendario de Mantenimientos</h1>
+
+<div id="calendar"></div>
+
+<!-- Modal para crear nuevo mantenimiento -->
+<div class="modal fade" id="modalNuevoMantenimiento" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        
+        <form id="formNuevoMantenimiento">
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Nuevo Mantenimiento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label>Nombre del equipo o área</label>
+                        <input type="text" id="nombre" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label>Categoría</label>
+                        <input type="text" id="categoria" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label>Frecuencia</label>
+                        <select id="frecuencia" class="form-control" required>
+                            <option value="0">Única vez (no repetir)</option>
+                            <option value="15">Cada 15 días</option>
+                            <option value="30">Cada mes</option>
+                            <option value="60">Cada 2 meses</option>
+                            <option value="180">Cada 6 meses</option>
+                            <option value="365">Cada año</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="divFechaLimite">
+                        <label>Fecha límite de mantenimientos</label>
+                        <input type="date" id="fechaLimite" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label>Fecha de revisión</label>
+                        <input type="date" id="fechaRevision" class="form-control" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'es',
+                selectable: true,
+                dateClick: function (info) {
+                    document.getElementById('fechaRevision').value = info.dateStr;
+                    var myModal = new bootstrap.Modal(document.getElementById('modalNuevoMantenimiento'));
+                    myModal.show();
+                },
+                events: '@Url.Action("GetEventos", "MantenimientoProgramadoes")'
+            });
+
+            calendar.render();
+
+            document.getElementById('divFechaLimite').style.display = 'none';
+
+            document.getElementById('frecuencia').addEventListener('change', function () {
+                var frecuencia = parseInt(this.value);
+                var divFechaLimite = document.getElementById('divFechaLimite');
+                if (frecuencia === 0) {
+                    divFechaLimite.style.display = 'none';
+                } else {
+                    divFechaLimite.style.display = 'block';
+                }
+            });
+
+            document.getElementById('formNuevoMantenimiento').addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                var data = {
+                    Nombre: document.getElementById('nombre').value,
+                    Categoria: document.getElementById('categoria').value,
+                    FrecuenciaDias: document.getElementById('frecuencia').value,
+                    FechaProximaRevision: document.getElementById('fechaRevision').value,
+                    FechaUltimaRevision: document.getElementById('fechaLimite').value || null
+                };
+
+                fetch('@Url.Action("CreateDesdeCalendario", "MantenimientoProgramadoes")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Error al guardar');
+                    }
+                });
+            });
+        });
+
+    </script>
+}

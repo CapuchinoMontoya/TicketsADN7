@@ -54,6 +54,10 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<IWhatsAppSender, WhatsAppSender>();
 builder.Services.AddScoped<IViewRenderService, ViewRenderService>();
 
+//Servicios
+builder.Services.AddHostedService<TicketGeneratorService>();
+
+
 var app = builder.Build();
 
 

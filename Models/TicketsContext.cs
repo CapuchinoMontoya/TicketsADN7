@@ -63,4 +63,6 @@ public DbSet<INTELISIS.APPCORE.EL.EstadoTicket> EstadoTicket { get; set; } = def
 public DbSet<INTELISIS.APPCORE.EL.Prioridad> Prioridad { get; set; } = default!;
 
 public DbSet<INTELISIS.APPCORE.EL.Ticket> Ticket { get; set; } = default!;
+
+public DbSet<INTELISIS.APPCORE.EL.MantenimientoProgramado> MantenimientoProgramado { get; set; } = default!;
 }
