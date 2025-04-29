@@ -100,10 +100,17 @@
                 }
             </td>
             <td>
-                <form asp-controller="Tickets" asp-action="ResueltoTicket" method="post" style="display:inline;">
-                    <input type="hidden" name="ticketId" value="@item.TicketID" />
-                    <button type="submit" class="btn btn-success">Finalizar</button>
-                </form>
+                @if (item.TicketChecklist == null)
+                {
+                    <form asp-controller="Tickets" asp-action="ResueltoTicket" method="post" style="display:inline;">
+                        <input type="hidden" name="ticketId" value="@item.TicketID" />
+                        <button type="submit" class="btn btn-success">Finalizar</button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-controller="MantenimientoProgramadoes" asp-action="RealizarChecklist" asp-route-id="@item.TicketID" class="btn btn-success" style="display:inline;">Checklist</a>
+                }
             </td>
         </tr>
 }

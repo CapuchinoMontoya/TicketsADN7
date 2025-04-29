@@ -19,6 +19,7 @@
     <link href="~/css/sb-admin-2.min.css" rel="stylesheet">
     <!-- Vendor CSS Files -->
     <link href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
+
 </head>
 <body id="page-top">
     <!-- Page Wrapper -->
@@ -53,6 +54,20 @@
                         <a class="collapse-item" asp-controller="CategoriaTickets" asp-action="Index">Categorias</a>
                         <a class="collapse-item" asp-controller="EstadoTickets" asp-action="Index">Estados</a>
                         <a class="collapse-item" asp-controller="Prioridads" asp-action="Index">Prioridades</a>
+                    </div>
+                </div>
+            </li>
+            <!-- Nav Item - Control de Checklist -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseChecklist"
+                   aria-expanded="true" aria-controls="collapseChecklist">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Control de Checklist</span>
+                </a>
+                <div id="collapseChecklist" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Opciones</h6>
+                        <a class="collapse-item" asp-controller="Checklists" asp-action="Index">Checklist</a>
                     </div>
                 </div>
             </li>
@@ -107,10 +122,7 @@
                      data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Custom Utilities:</h6>
-                        <a class="collapse-item" href="utilities-color.html">Colors</a>
-                        <a class="collapse-item" href="utilities-border.html">Borders</a>
-                        <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                        <a class="collapse-item" href="utilities-other.html">Other</a>
+                        <a class="collapse-item" asp-controller="MantenimientoProgramadoes" asp-action="Index">Mantenimientos Preventivos</a>
                     </div>
                 </div>
             </li>
@@ -392,6 +404,7 @@
     
     <!-- Bootstrap core JavaScript-->
     <script src="~/lib/vendor/jquery/jquery.min.js"></script>
+   
     
     <script src="~/lib/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
@@ -399,6 +412,10 @@
     <script src="~/lib/toastr.js/toastr.min.js"></script>
     <partial name="_Alerts" />
     
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/es.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="~/lib/vendor/jquery-easing/jquery.easing.min.js"></script>

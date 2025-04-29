@@ -28,6 +28,7 @@ namespace INTELISIS.APPCORE.EL
         public int? UsuarioAsignadoID { get; set; }
         [ForeignKey("Departamento")]
         public int? DepartamentoID { get; set; }
+        
 
         // Propiedades de navegación
         public virtual CategoriaTicket Categoria { get; set; }
@@ -36,5 +37,7 @@ namespace INTELISIS.APPCORE.EL
         public virtual Usuario UsuarioReporte { get; set; }
         public virtual Usuario UsuarioAsignado { get; set; }
         public virtual Departamento Departamento { get; set; }
+        public virtual TicketChecklist TicketChecklist { get; set; }
+
     }
 }
