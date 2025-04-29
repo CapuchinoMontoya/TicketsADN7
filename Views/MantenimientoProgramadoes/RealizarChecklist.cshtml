@@ -1,0 +1,43 @@
+﻿@model INTELISIS.APPCORE.EL.TicketChecklist
+@using INTELISIS.APPCORE.EL
+
+
+<h2>Checklist: @Model.Checklist.Nombre</h2>
+<p>@Model.Checklist.Descripcion</p>
+
+<form asp-action="GuardarChecklist" method="post">
+    <input type="hidden" name="ticketChecklistId" value="@Model.TicketChecklistID" />
+
+    @foreach (var campo in Model.Checklist.Campos)
+    {
+        <div class="form-group">
+            <label>@campo.NombreCampo</label>
+
+            @switch (campo.Tipo)
+            {
+                case TipoCampo.Checkbox:
+                    <input type="checkbox" name="campo_@campo.ChecklistCampoID" />
+                    break;
+                case TipoCampo.Texto:
+                    <input type="text" name="campo_@campo.ChecklistCampoID" class="form-control" required="@campo.RequiereEvidencia" />
+                    break;
+                case TipoCampo.Cantidad:
+                    <input type="number" name="campo_@campo.ChecklistCampoID" class="form-control" required="@campo.RequiereEvidencia" />
+                    break;
+                case TipoCampo.Fecha:
+                    <input type="date" name="campo_@campo.ChecklistCampoID" class="form-control" required="@campo.RequiereEvidencia" />
+                    break;
+                case TipoCampo.Archivo:
+                    <input type="file" name="campo_@campo.ChecklistCampoID" class="form-control" required="@campo.RequiereEvidencia" />
+                    break;
+            }
+
+            @if (campo.RequiereEvidencia)
+            {
+                <small class="text-danger">* Requiere evidencia</small>
+            }
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>

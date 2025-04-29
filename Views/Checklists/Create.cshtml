@@ -1,0 +1,61 @@
+﻿@model INTELISIS.APPCORE.EL.Checklist
+
+@{
+    ViewData["Title"] = "Crear Checklist";
+}
+
+<h2>Crear Checklist</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label>Nombre del Checklist</label>
+        <input asp-for="Nombre" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Descripción</label>
+        <textarea asp-for="Descripcion" class="form-control"></textarea>
+    </div>
+
+    <h4>Campos del Checklist</h4>
+    <table class="table" id="camposTable">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Requiere Evidencia</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <button type="button" class="btn btn-secondary" onclick="agregarCampo()">Agregar Campo</button>
+
+    <br /><br />
+    <button type="submit" class="btn btn-primary">Guardar Checklist</button>
+</form>
+
+@section Scripts {
+    <script>
+        let index = 0;
+
+        function agregarCampo() {
+            const row = `
+                <tr>
+                    <td><input name="campos[${index}].NombreCampo" class="form-control" required /></td>
+                    <td>
+                        <select name="campos[${index}].Tipo" class="form-control">
+                            <option value="1">Checkbox</option>
+                            <option value="2">Texto</option>
+                            <option value="3">Cantidad</option>
+                            <option value="4">Fecha</option>
+                            <option value="5">Archivo</option>
+                        </select>
+                    </td>
+                    <td><input type="checkbox" name="campos[${index}].RequiereEvidencia" /></td>
+                    <td><button type="button" class="btn btn-danger" onclick="this.closest('tr').remove()">Eliminar</button></td>
+                </tr>`;
+            $("#camposTable tbody").append(row);
+            index++;
+        }
+    </script>
+}

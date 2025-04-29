@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using INTELISIS.APPCORE.EL;
 using TicketsADN7.Models;
@@ -223,6 +218,73 @@ namespace TicketsADN7.Controllers
                 return Ok();
             }
             return BadRequest();
+        }
+
+        public async Task<IActionResult> RealizarChecklist(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var ticketChecklist = await _context.TicketChecklist
+                .Include(tc => tc.Checklist)
+                    .ThenInclude(c => c.Campos) 
+                .FirstOrDefaultAsync(tc => tc.TicketID == id);
+
+            if (ticketChecklist == null)
+                return NotFound();
+
+            return View(ticketChecklist);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GuardarChecklist(int ticketChecklistId)
+         {
+            var ticketChecklist = await _context.TicketChecklist
+                .Include(tc => tc.Checklist)
+                    .ThenInclude(c => c.Campos)
+                .FirstOrDefaultAsync(tc => tc.TicketChecklistID == ticketChecklistId);
+
+            if (ticketChecklist == null)
+                return NotFound();
+
+            foreach (var campo in ticketChecklist.Checklist.Campos)
+            {
+                string inputName = $"campo_{campo.ChecklistCampoID}";
+                string valor = null;
+
+                if ((int)campo.Tipo == 1) // Checkbox
+                {
+                    valor = Request.Form[inputName].FirstOrDefault() == "on" ? "true" : "false";
+                }
+                else
+                {
+                    valor = Request.Form[inputName].FirstOrDefault();
+                }
+
+                // Validar si es requerido y no se llenó
+                if (campo.RequiereEvidencia && string.IsNullOrWhiteSpace(valor))
+                {
+                    TempData["ToastrType"] = "warning";
+                    TempData["ToastrMessage"] = $"El campo '{campo.NombreCampo}' es obligatorio.";
+                    return RedirectToAction("RealizarChecklist", new { id = ticketChecklist.TicketID });
+                }
+
+                var respuesta = new RespuestaChecklistCampo
+                {
+                    TicketChecklistID = ticketChecklist.TicketChecklistID,
+                    ChecklistCampoID = campo.ChecklistCampoID,
+                    Valor = valor
+                };
+
+                _context.RespuestaChecklistCampo.Add(respuesta);
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["ToastrType"] = "success";
+            TempData["ToastrMessage"] = "Checklist guardado correctamente.";
+
+            return RedirectToAction("ResueltoTicket", "Tickets", new { ticketId = ticketChecklist.TicketID });
         }
 
     }

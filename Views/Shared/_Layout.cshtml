@@ -57,6 +57,20 @@
                     </div>
                 </div>
             </li>
+            <!-- Nav Item - Control de Checklist -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseChecklist"
+                   aria-expanded="true" aria-controls="collapseChecklist">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Control de Checklist</span>
+                </a>
+                <div id="collapseChecklist" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Opciones</h6>
+                        <a class="collapse-item" asp-controller="Checklists" asp-action="Index">Checklist</a>
+                    </div>
+                </div>
+            </li>
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
                 <a asp-controller="Usuarios" asp-action="Index" class="nav-link">

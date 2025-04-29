@@ -72,6 +72,7 @@ namespace TicketsADN7.Controllers
             ViewData["PrioridadID"] = new SelectList(_context.Prioridad, "PrioridadID", "Nombre");
             ViewData["UsuarioAsignadoID"] = new SelectList(_context.Usuario, "UsuarioID", "NombreUsuario");
             ViewData["UsuarioReporteID"] = new SelectList(_context.Usuario, "UsuarioID", "NombreUsuario");
+            ViewBag.Checklists = new SelectList(_context.Checklist.ToList(), "ChecklistID", "Nombre");
             return View();
         }
 
@@ -80,7 +81,7 @@ namespace TicketsADN7.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TicketID,Titulo,Descripcion,RutaArchivo,FechaCreacion,FechaCierre,CategoriaID,PrioridadID,EstadoID,UsuarioReporteID,UsuarioAsignadoID,DepartamentoID")] Ticket ticket)
+        public async Task<IActionResult> Create([Bind("TicketID,Titulo,Descripcion,RutaArchivo,FechaCreacion,FechaCierre,CategoriaID,PrioridadID,EstadoID,UsuarioReporteID,UsuarioAsignadoID,DepartamentoID")] Ticket ticket, int? checklistId)
         {
             ModelState.Remove("Categoria");
             ModelState.Remove("Departamento");
@@ -88,10 +89,23 @@ namespace TicketsADN7.Controllers
             ModelState.Remove("Prioridad");
             ModelState.Remove("UsuarioAsignado");
             ModelState.Remove("UsuarioReporte");
+            ModelState.Remove("TicketChecklist");
             if (ModelState.IsValid)
             {
                 _context.Add(ticket);
                 await _context.SaveChangesAsync();
+
+                if (checklistId.HasValue)
+                {
+                    var ticketChecklist = new TicketChecklist
+                    {
+                        TicketID = ticket.TicketID,
+                        ChecklistID = checklistId.Value
+                    };
+                    _context.TicketChecklist.Add(ticketChecklist);
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction(nameof(MisTickets));
             }
             ViewData["CategoriaID"] = new SelectList(_context.CategoriaTicket, "CategoriaID", "Nombre", ticket.CategoriaID);
@@ -100,6 +114,7 @@ namespace TicketsADN7.Controllers
             ViewData["PrioridadID"] = new SelectList(_context.Prioridad, "PrioridadID", "Nombre", ticket.PrioridadID);
             ViewData["UsuarioAsignadoID"] = new SelectList(_context.Usuario, "UsuarioID", "NombreUsuario", ticket.UsuarioAsignadoID);
             ViewData["UsuarioReporteID"] = new SelectList(_context.Usuario, "UsuarioID", "NombreUsuario", ticket.UsuarioReporteID);
+            ViewBag.Checklists = new SelectList(await _context.Checklist.ToListAsync(), "ChecklistID", "Nombre", checklistId);
             return View(ticket);
         }
         
@@ -457,7 +472,15 @@ namespace TicketsADN7.Controllers
         {
             var user = HttpContext.User;
             var userName = user.Identity.Name.ToString();
-            var ticketsContext = _context.Ticket.Include(t => t.Categoria).Include(t => t.Departamento).Include(t => t.Estado).Include(t => t.Prioridad).Include(t => t.UsuarioAsignado).Include(t => t.UsuarioReporte).Where(t => t.UsuarioAsignado.NombreUsuario == userName && t.EstadoID != 4 && t.EstadoID != 5 && t.EstadoID != 6);
+            var ticketsContext = _context.Ticket
+                .Include(t => t.Categoria)
+                .Include(t => t.Departamento)
+                .Include(t => t.Estado)
+                .Include(t => t.Prioridad)
+                .Include(t => t.UsuarioAsignado)
+                .Include(t => t.UsuarioReporte)
+                .Include(t => t.TicketChecklist)
+                .Where(t => t.UsuarioAsignado.NombreUsuario == userName && t.EstadoID != 4 && t.EstadoID != 5 && t.EstadoID != 6);
             return View(await ticketsContext.ToListAsync());
         }
 
@@ -602,44 +625,74 @@ namespace TicketsADN7.Controllers
         }
 
         /// <summary>
-        /// Metodo para poner en estatus resuelto un ticket
+        /// Metodo para poner en estatus resuelto un ticket en caso de tener checklist se debe de validar
         /// </summary>
         /// <param name="ticketId">Id del ticket que se va a poner en estatus resuelto</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> ResueltoTicket(int ticketId)
         {
             try
             {
-                //Buscar ticket en la base de datos
                 var ticket = await _context.Ticket
                     .Include(t => t.Estado)
                     .FirstOrDefaultAsync(t => t.TicketID == ticketId);
 
                 if (ticket == null)
-                {
                     return NotFound(new { success = false, message = "Ticket no encontrado" });
+
+                // Verificar si el ticket tiene un checklist asignado
+                var ticketChecklist = await _context.TicketChecklist
+                .Include(tc => tc.Checklist)
+                .FirstOrDefaultAsync(tc => tc.TicketID == ticketId);
+
+                if (ticketChecklist != null)
+                {
+                    int ticketChecklistId = ticketChecklist.TicketChecklistID;
+
+                    // Obtener todos los campos del checklist asignado
+                    var camposChecklist = await _context.ChecklistCampo
+                        .Where(c => c.ChecklistID == 1)
+                        .ToListAsync();
+
+                    int totalCampos = camposChecklist.Count;
+
+                    // Obtener las respuestas que se han dado a ese checklist en este ticket
+                    var respuestas = await _context.RespuestaChecklistCampo
+                        .Where(r => r.TicketChecklistID == ticketChecklistId)
+                        .ToListAsync();
+
+                    int camposRespondidos = respuestas
+                        .Where(r => !string.IsNullOrWhiteSpace(r.Valor))
+                        .Select(r => r.ChecklistCampoID)
+                        .Distinct()
+                        .Count();
+
+                    if (camposRespondidos < totalCampos)
+                    {
+                        TempData["ToastrType"] = "warning";
+                        TempData["ToastrMessage"] = "No se puede resolver el ticket. Aún hay campos del checklist sin completar.";
+                        return RedirectToAction(nameof(MisTicketsAsigandos));
+                    }
                 }
 
-                //Se le asigna por el estatus 4 al ticket (Resuelto)
-                ticket.EstadoID = 4;
 
+                // Cambiar estado a "Resuelto" (ID = 4)
+                ticket.EstadoID = 4;
                 await _context.SaveChangesAsync();
 
                 TempData["ToastrType"] = "success";
-                TempData["ToastrMessage"] = $"Ticket Resuelto";
+                TempData["ToastrMessage"] = "Ticket Resuelto";
 
-                //Logica para mandar correo electronico
                 var usuarioAsignado = await _context.Usuario
                     .FirstOrDefaultAsync(t => t.UsuarioID == ticket.UsuarioReporteID);
 
-                //Notificar por correo electronico
                 var model = new CorreoGenerico
                 {
                     NombreUsuario = usuarioAsignado.NombreCompleto,
                     Titulo = "Ticket Resuelto",
-                    Mensaje = "El ticket ha sido resuelto y esta en espera de validacion.",
+                    Mensaje = "El ticket ha sido resuelto y está en espera de validación.",
                     Url = "https://localhost:7210/Tickets/MisTickets",
                     TextoBoton = "Ver Ticket Asignado",
                     ColorFondo = "#007bff"
@@ -647,18 +700,12 @@ namespace TicketsADN7.Controllers
 
                 string body = await _viewRenderService.RenderToStringAsync("Emails/Asignacion", model);
 
-                EmailHelper.EnviarCorreo(
-                    _emailConfig,
-                    usuarioAsignado.Email,
-                    "Ticket Resuelto",
-                    body
-                );
+                EmailHelper.EnviarCorreo(_emailConfig, usuarioAsignado.Email, "Ticket Resuelto", body);
 
-                //Notificar por Whatsapp
                 var message = new WhatsAppMessage(
-                        to: usuarioAsignado.Telefono,
-                        body: "El ticket ha sido resuelto y esta en espera de validacion."
-                    );
+                    to: usuarioAsignado.Telefono,
+                    body: "El ticket ha sido resuelto y está en espera de validación."
+                );
 
                 bool result = _whatsAppSender.SendWhatsAppMessage(message);
 
@@ -666,10 +713,11 @@ namespace TicketsADN7.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al asignar ticket");
-                return StatusCode(500, new { success = false, message = "Error interno al asignar ticket" });
+                _logger.LogError(ex, "Error al resolver ticket");
+                return StatusCode(500, new { success = false, message = "Error interno al resolver ticket" });
             }
         }
+
 
         /// <summary>
         /// Metodo para retornar todos los ticktes
