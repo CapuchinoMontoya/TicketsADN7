@@ -16,6 +16,7 @@ namespace INTELISIS.APPCORE.EL
         [StringLength(100, ErrorMessage = "El nombre del departamento no puede exceder 100 caracteres")]
         public string NombreDepartamento { get; set; }
 
+        [Required(ErrorMessage = "La descripción del departamento es obligatorio")]
         [StringLength(255, ErrorMessage = "La descripción no puede exceder 255 caracteres")]
         public string Descripcion { get; set; }
 
