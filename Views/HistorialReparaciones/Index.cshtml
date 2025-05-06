@@ -1,0 +1,77 @@
+﻿@model IEnumerable<INTELISIS.APPCORE.EL.HistorialReparaciones>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ActivoID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Area)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaReparacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DescripcionProblema)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TrabajoRealizado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Costo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProveedorID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Responsable)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ActivoID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Area)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaReparacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DescripcionProblema)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TrabajoRealizado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Costo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProveedorID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Responsable)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ReparacionID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ReparacionID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ReparacionID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

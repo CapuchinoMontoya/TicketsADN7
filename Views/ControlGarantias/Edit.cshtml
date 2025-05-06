@@ -1,0 +1,64 @@
+﻿@model INTELISIS.APPCORE.EL.ControlGarantias
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>ControlGarantias</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="GarantiaID" />
+            <div class="form-group">
+                <label asp-for="ActivoID" class="control-label"></label>
+                <input asp-for="ActivoID" class="form-control" />
+                <span asp-validation-for="ActivoID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProveedorID" class="control-label"></label>
+                <input asp-for="ProveedorID" class="form-control" />
+                <span asp-validation-for="ProveedorID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaInicioGarantia" class="control-label"></label>
+                <input asp-for="FechaInicioGarantia" class="form-control" />
+                <span asp-validation-for="FechaInicioGarantia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaFinGarantia" class="control-label"></label>
+                <input asp-for="FechaFinGarantia" class="form-control" />
+                <span asp-validation-for="FechaFinGarantia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TipoGarantia" class="control-label"></label>
+                <input asp-for="TipoGarantia" class="form-control" />
+                <span asp-validation-for="TipoGarantia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Detalles" class="control-label"></label>
+                <input asp-for="Detalles" class="form-control" />
+                <span asp-validation-for="Detalles" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EstadoGarantia" class="control-label"></label>
+                <input asp-for="EstadoGarantia" class="form-control" />
+                <span asp-validation-for="EstadoGarantia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

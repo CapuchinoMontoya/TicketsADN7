@@ -73,4 +73,10 @@ public DbSet<INTELISIS.APPCORE.EL.TicketChecklist> TicketChecklist { get; set; }
 public DbSet<INTELISIS.APPCORE.EL.RespuestaChecklistCampo> RespuestaChecklistCampo { get; set; } = default!;
 
 public DbSet<INTELISIS.APPCORE.EL.ChecklistCampo> ChecklistCampo { get; set; } = default!;
+
+public DbSet<INTELISIS.APPCORE.EL.CatalogoProveedores> CatalogoProveedores { get; set; } = default!;
+
+public DbSet<INTELISIS.APPCORE.EL.HistorialReparaciones> HistorialReparaciones { get; set; } = default!;
+
+public DbSet<INTELISIS.APPCORE.EL.ControlGarantias> ControlGarantias { get; set; } = default!;
 }
