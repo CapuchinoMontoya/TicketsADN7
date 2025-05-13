@@ -4,6 +4,53 @@
     ViewData["Title"] = "Editar Usuario";
 }
 
+<style>
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+    input:checked + .slider {
+        background-color: #4CAF50;
+    }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+</style>
+
 <div class="container-fluid px-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mt-4"><i class="fas fa-user-edit me-2"></i>@ViewData["Title"]</h1>
@@ -31,10 +78,9 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input asp-for="Contrasena" type="password" class="form-control" placeholder=" " required />
+                            <input asp-for="Contrasena" type="password" class="form-control" placeholder=" " value="@Model.Contrasena" required />
                             <label asp-for="Contrasena" class="form-label"></label>
                             <span asp-validation-for="Contrasena" class="text-danger small"></span>
-                            <small class="form-text text-muted">Dejar en blanco para mantener la actual</small>
                         </div>
 
                         <div class="form-floating mb-3">
@@ -53,7 +99,7 @@
                     <!-- Segunda columna -->
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <select asp-for="RolID" class="form-select" asp-items="ViewBag.RolID" required>
+                            <select asp-for="RolID" class="form-control" asp-items="ViewBag.RolID" required>
                                 <option value="">Seleccione un rol</option>
                             </select>
                             <label asp-for="RolID" class="form-label"></label>
@@ -61,7 +107,7 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                            <select asp-for="DepartamentoID" class="form-select" asp-items="ViewBag.DepartamentoID" required>
+                            <select asp-for="DepartamentoID" class="form-control" asp-items="ViewBag.DepartamentoID" required>
                                 <option value="">Seleccione un departamento</option>
                             </select>
                             <label asp-for="DepartamentoID" class="form-label"></label>
@@ -74,9 +120,12 @@
                             <span asp-validation-for="Telefono" class="text-danger small"></span>
                         </div>
 
-                        <div class="form-check form-switch ps-5 mb-4">
-                            <input class="form-check-input" type="checkbox" asp-for="Activo" />
-                            <label class="form-check-label fw-medium" asp-for="Activo"></label>
+                        <div class="form-check form-switch mb-3 ps-5">
+                            <label class="switch">
+                                <input type="checkbox" asp-for="Activo" id="customSwitch">
+                                <span class="slider"></span>
+                            </label>
+                            <span id="switchLabel">@((Model?.Activo ?? false) ? "Activo" : "Inactivo")</span>
                         </div>
                     </div>
                 </div>
@@ -90,17 +139,6 @@
                     </button>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <div class="card shadow-sm">
-        <div class="card-header bg-white py-3">
-            <h5 class="mb-0"><i class="fas fa-history me-2"></i>Actividad Reciente</h5>
-        </div>
-        <div class="card-body">
-            <div class="alert alert-info mb-0">
-                <i class="fas fa-info-circle me-2"></i>Aquí podría mostrarse el historial de cambios del usuario.
-            </div>
         </div>
     </div>
 </div>

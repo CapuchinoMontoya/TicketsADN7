@@ -60,8 +60,16 @@ namespace TicketsADN7.Controllers
             {
                 _context.Add(categoriaTicket);
                 await _context.SaveChangesAsync();
+
+                TempData["ToastrType"] = "success";
+                TempData["ToastrMessage"] = $"Categoría registrada correctamente";
+
                 return RedirectToAction(nameof(Index));
             }
+
+            TempData["ToastrType"] = "error";
+            TempData["ToastrMessage"] = $"Error el intentar registrar una nueva categoría";
+
             return View(categoriaTicket);
         }
 
@@ -99,6 +107,9 @@ namespace TicketsADN7.Controllers
                 {
                     _context.Update(categoriaTicket);
                     await _context.SaveChangesAsync();
+
+                    TempData["ToastrType"] = "success";
+                    TempData["ToastrMessage"] = $"Categoría editada correctamente";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -113,6 +124,10 @@ namespace TicketsADN7.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            TempData["ToastrType"] = "error";
+            TempData["ToastrMessage"] = $"Error el intentar editar la categoría";
+
             return View(categoriaTicket);
         }
 

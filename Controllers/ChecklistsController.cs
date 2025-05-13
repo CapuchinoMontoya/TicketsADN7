@@ -40,6 +40,7 @@ namespace TicketsADN7.Controllers
             ModelState.Remove("Campos[0].Checklist");
             ModelState.Remove("Campos[1].Checklist");
             ModelState.Remove("Campos[2].Checklist");
+            ModelState.Remove("Campos[1].RequiereEvidencia");
             if (ModelState.IsValid && campos.Any())
             {
                 checklist.Campos = campos;
@@ -48,6 +49,10 @@ namespace TicketsADN7.Controllers
                 return RedirectToAction("Index", "Checklists");
             }
             ModelState.AddModelError("", "Debe agregar al menos un campo.");
+
+            TempData["ToastrType"] = "error";
+            TempData["ToastrMessage"] = $"Debes agregar al menos un campo.";
+
             return View(checklist);
         }
     }
