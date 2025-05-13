@@ -4,58 +4,149 @@
     ViewData["Title"] = "Crear Checklist";
 }
 
-<h2>Crear Checklist</h2>
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0"><i class="fas fa-clipboard-check mr-2"></i>Crear Nuevo Checklist</h2>
+        </div>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label>Nombre del Checklist</label>
-        <input asp-for="Nombre" class="form-control" />
+        <div class="card-body">
+            <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                <!-- Sección de información básica -->
+                <div class="form-section mb-4 p-3 border rounded bg-light">
+                    <h4 class="text-primary mb-3"><i class="fas fa-info-circle mr-2"></i>Información Básica</h4>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">Nombre del Checklist</label>
+                        <input asp-for="Nombre" class="form-control form-control-lg" placeholder="Ingrese el nombre del checklist" required />
+                        <div class="invalid-feedback">Por favor ingrese un nombre para el checklist.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">Descripción</label>
+                        <textarea asp-for="Descripcion" class="form-control" rows="3" placeholder="Describa el propósito de este checklist"></textarea>
+                    </div>
+                </div>
+
+                <!-- Sección de campos del checklist -->
+                <div class="form-section mb-4 p-3 border rounded bg-light">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="text-primary mb-0"><i class="fas fa-list-ul mr-2"></i>Campos del Checklist</h4>
+                        <button type="button" class="btn btn-success" onclick="agregarCampo()">
+                            <i class="fas fa-plus mr-2"></i>Agregar Campo
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="camposTable">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th width="30%">Nombre</th>
+                                    <th width="25%">Tipo</th>
+                                    <th width="20%">Requiere Evidencia</th>
+                                    <th width="25%">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="form-group text-right">
+                    <a href="#" class="btn btn-outline-secondary mr-2">
+                        <i class="fas fa-times mr-2"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save mr-2"></i>Guardar Checklist
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="form-group">
-        <label>Descripción</label>
-        <textarea asp-for="Descripcion" class="form-control"></textarea>
-    </div>
+</div>
+<style>
+    .form-section {
+        transition: all 0.3s ease;
+    }
 
-    <h4>Campos del Checklist</h4>
-    <table class="table" id="camposTable">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Tipo</th>
-                <th>Requiere Evidencia</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-    <button type="button" class="btn btn-secondary" onclick="agregarCampo()">Agregar Campo</button>
+        .form-section:hover {
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
 
-    <br /><br />
-    <button type="submit" class="btn btn-primary">Guardar Checklist</button>
-</form>
+    .card {
+        border-radius: 10px;
+    }
 
+    .card-header {
+        border-radius: 10px 10px 0 0 !important;
+    }
+
+    .table th {
+        font-weight: 600;
+    }
+
+    .btn-action {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+</style>
 @section Scripts {
     <script>
         let index = 0;
 
         function agregarCampo() {
             const row = `
-                <tr>
-                    <td><input name="campos[${index}].NombreCampo" class="form-control" required /></td>
-                    <td>
-                        <select name="campos[${index}].Tipo" class="form-control">
-                            <option value="1">Checkbox</option>
-                            <option value="2">Texto</option>
-                            <option value="3">Cantidad</option>
-                            <option value="4">Fecha</option>
-                            <option value="5">Archivo</option>
-                        </select>
-                    </td>
-                    <td><input type="checkbox" name="campos[${index}].RequiereEvidencia" /></td>
-                    <td><button type="button" class="btn btn-danger" onclick="this.closest('tr').remove()">Eliminar</button></td>
-                </tr>`;
+                        <tr class="align-middle">
+                            <td>
+                                <input name="campos[${index}].NombreCampo"
+                                       class="form-control"
+                                       placeholder="Nombre del campo"
+                                       required />
+                                <div class="invalid-feedback">Este campo es requerido</div>
+                            </td>
+                            <td>
+                                <select name="campos[${index}].Tipo" class="form-control">
+                                    <option value="1">Checkbox</option>
+                                    <option value="2">Texto</option>
+                                    <option value="3">Cantidad</option>
+                                    <option value="4">Fecha</option>
+                                    <option value="5">Archivo</option>
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input"
+                                           id="evidencia-${index}" name="campos[${index}].RequiereEvidencia" />
+                                    <label class="custom-control-label" for="evidencia-${index}"></label>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm"
+                                        onclick="this.closest('tr').remove()">
+                                    <i class="fas fa-trash-alt mr-1"></i>Eliminar
+                                </button>
+                            </td>
+                        </tr>`;
             $("#camposTable tbody").append(row);
             index++;
         }
+
+        // Validación de formulario
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
     </script>
 }

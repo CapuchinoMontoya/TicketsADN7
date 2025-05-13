@@ -14,10 +14,12 @@ namespace INTELISIS.APPCORE.EL
 
         [Required(ErrorMessage = "El nombre del departamento es obligatorio")]
         [StringLength(100, ErrorMessage = "El nombre del departamento no puede exceder 100 caracteres")]
+        [Display(Name = "Nombre del departamento")]
         public string NombreDepartamento { get; set; }
 
         [Required(ErrorMessage = "La descripción del departamento es obligatorio")]
         [StringLength(255, ErrorMessage = "La descripción no puede exceder 255 caracteres")]
+        [Display(Name = "Descripción del departamento")]
         public string Descripcion { get; set; }
 
         // Propiedad de navegación

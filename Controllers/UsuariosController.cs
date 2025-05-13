@@ -53,8 +53,8 @@ namespace TicketsADN7.Controllers
         // GET: Usuarios/Create
         public IActionResult Create()
         {
-            ViewData["DepartamentoID"] = new SelectList(_context.Set<Departamento>(), "DepartamentoID", "Descripcion");
-            ViewData["RolID"] = new SelectList(_context.Set<Rol>(), "RolID", "Descripcion");
+            ViewData["DepartamentoID"] = new SelectList(_context.Set<Departamento>(), "DepartamentoID", "NombreDepartamento");
+            ViewData["RolID"] = new SelectList(_context.Set<Rol>(), "RolID", "NombreRol");
             return View();
         }
 
@@ -71,10 +71,18 @@ namespace TicketsADN7.Controllers
             {
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
+
+                TempData["ToastrType"] = "success";
+                TempData["ToastrMessage"] = $"Usuario creado correctamente";
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartamentoID"] = new SelectList(_context.Set<Departamento>(), "DepartamentoID", "Descripcion", usuario.DepartamentoID);
-            ViewData["RolID"] = new SelectList(_context.Set<Rol>(), "RolID", "Descripcion", usuario.RolID);
+            ViewData["DepartamentoID"] = new SelectList(_context.Set<Departamento>(), "DepartamentoID", "NombreDepartamento", usuario.DepartamentoID);
+            ViewData["RolID"] = new SelectList(_context.Set<Rol>(), "RolID", "NombreRol", usuario.RolID);
+
+            TempData["ToastrType"] = "error";
+            TempData["ToastrMessage"] = $"Error el intentar registrar un nuevo usuario";
+
             return View(usuario);
         }
 
@@ -91,8 +99,8 @@ namespace TicketsADN7.Controllers
             {
                 return NotFound();
             }
-            ViewData["DepartamentoID"] = new SelectList(_context.Set<Departamento>(), "DepartamentoID", "Descripcion", usuario.DepartamentoID);
-            ViewData["RolID"] = new SelectList(_context.Set<Rol>(), "RolID", "Descripcion", usuario.RolID);
+            ViewData["DepartamentoID"] = new SelectList(_context.Set<Departamento>(), "DepartamentoID", "NombreDepartamento", usuario.DepartamentoID);
+            ViewData["RolID"] = new SelectList(_context.Set<Rol>(), "RolID", "NombreRol", usuario.RolID);
             return View(usuario);
         }
 
@@ -117,6 +125,9 @@ namespace TicketsADN7.Controllers
                 {
                     _context.Update(usuario);
                     await _context.SaveChangesAsync();
+
+                    TempData["ToastrType"] = "success";
+                    TempData["ToastrMessage"] = $"Usuario editado correctamente";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -131,8 +142,12 @@ namespace TicketsADN7.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartamentoID"] = new SelectList(_context.Set<Departamento>(), "DepartamentoID", "Descripcion", usuario.DepartamentoID);
-            ViewData["RolID"] = new SelectList(_context.Set<Rol>(), "RolID", "Descripcion", usuario.RolID);
+            ViewData["DepartamentoID"] = new SelectList(_context.Set<Departamento>(), "DepartamentoID", "NombreDepartamento", usuario.DepartamentoID);
+            ViewData["RolID"] = new SelectList(_context.Set<Rol>(), "RolID", "NombreRol", usuario.RolID);
+
+            TempData["ToastrType"] = "error";
+            TempData["ToastrMessage"] = $"Error el intentar editar al usuario";
+
             return View(usuario);
         }
 
