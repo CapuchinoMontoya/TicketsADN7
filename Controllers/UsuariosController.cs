@@ -7,16 +7,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using INTELISIS.APPCORE.EL;
 using TicketsADN7.Models;
+using LIBRARY.COMMON.Crypto;
+using Microsoft.Extensions.Options;
 
 namespace TicketsADN7.Controllers
 {
     public class UsuariosController : Controller
     {
         private readonly TicketsContext _context;
+        private readonly string _key;
 
-        public UsuariosController(TicketsContext context)
+        public UsuariosController(TicketsContext context, IOptions<EncryptionSettings> encryptionOptions)
         {
             _context = context;
+            _key = encryptionOptions.Value.Key;
         }
         
         // GET: Usuarios
@@ -67,8 +71,25 @@ namespace TicketsADN7.Controllers
         {
             ModelState.Remove("Rol");
             ModelState.Remove("Departamento");
+
+            if (_context.Usuario.Any(u => u.NombreUsuario == usuario.NombreUsuario))
+            {
+                ModelState.AddModelError("NombreUsuario", "El nombre de usuario ya está en uso.");
+            }
+
+            if (_context.Usuario.Any(u => u.Email == usuario.Email))
+            {
+                ModelState.AddModelError("Email", "El correo electrónico ya está registrado.");
+            }
+
+            if (_context.Usuario.Any(u => u.Telefono == usuario.Telefono))
+            {
+                ModelState.AddModelError("Telefono", "El número de teléfono ya está registrado.");
+            }
+
             if (ModelState.IsValid)
             {
+                usuario.Contrasena = CryptionHelper.Encrypt(usuario.Contrasena, _key);
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
 
@@ -95,6 +116,7 @@ namespace TicketsADN7.Controllers
             }
 
             var usuario = await _context.Usuario.FindAsync(id);
+            usuario.Contrasena = CryptionHelper.Decrypt(usuario.Contrasena, _key);
             if (usuario == null)
             {
                 return NotFound();
@@ -119,10 +141,26 @@ namespace TicketsADN7.Controllers
             ModelState.Remove("Rol");
             ModelState.Remove("Departamento");
 
+            if (_context.Usuario.Any(u => u.NombreUsuario == usuario.NombreUsuario))
+            {
+                ModelState.AddModelError("NombreUsuario", "El nombre de usuario ya está en uso.");
+            }
+
+            if (_context.Usuario.Any(u => u.Email == usuario.Email))
+            {
+                ModelState.AddModelError("Email", "El correo electrónico ya está registrado.");
+            }
+
+            if (_context.Usuario.Any(u => u.Telefono == usuario.Telefono))
+            {
+                ModelState.AddModelError("Telefono", "El número de teléfono ya está registrado.");
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    usuario.Contrasena = CryptionHelper.Encrypt(usuario.Contrasena, _key);
                     _context.Update(usuario);
                     await _context.SaveChangesAsync();
 
