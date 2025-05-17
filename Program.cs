@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using WHATSAPPSERVICES;
 using INTELISIS.APPCORE.BL;
 using EmailService;
+using LIBRARY.COMMON.Crypto;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,10 @@ builder.Services.Configure<WhatsAppConfiguration>(builder.Configuration.GetSecti
 
 // Registrar EmailConfiguration desde appsettings.json
 builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailSettings"));
+
+// Registrar EmailConfiguration desde appsettings.json
+builder.Services.Configure<EncryptionSettings>(
+    builder.Configuration.GetSection("EncryptionSettings"));
 
 // Configurar autenticación con cookies
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
