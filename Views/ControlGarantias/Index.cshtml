@@ -1,71 +1,95 @@
 ﻿@model IEnumerable<INTELISIS.APPCORE.EL.ControlGarantias>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Control de garantías";
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ActivoID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProveedorID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaInicioGarantia)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaFinGarantia)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TipoGarantia)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Detalles)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EstadoGarantia)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ActivoID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProveedorID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaInicioGarantia)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaFinGarantia)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TipoGarantia)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Detalles)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EstadoGarantia)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.GarantiaID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.GarantiaID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.GarantiaID">Delete</a>
-            </td>
-        </tr>
+
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mt-4"><i class="fas fa-users me-2"></i>@ViewData["Title"]</h1>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> Nueva grantía
+        </a>
+    </div>
+
+
+
+    <div class="card mb-4">
+        <div class="card-header bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-table me-2"></i>Listado de proveedores</h5>
+                <div>
+                    <div class="input-group">
+
+                        <span class="input-group-text bg-transparent"><i class="fas fa-search"></i></span>
+                        <input type="text" id="searchInput" class="form-control border-start-0" placeholder="Buscar...">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered" id="usersTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Equipo</th>
+                            <th>Proveedor</th>
+                            <th>Fecha de compra</th>
+                            <th>Fecha de inicio de garantía</th>
+                            <th>Correo Fecha de fin de garantía</th>
+                            <th>Tipo de garantía</th>
+                            <th>Detalles</th>
+                            <th>Estado de garantía</th>
+                            <th>Editar</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.EquipoID)</td>
+                                <td>@Html.DisplayFor(modelItem => item.ProveedorID)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FechaCompra)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FechaInicioGarantia)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FechaFinGarantia)</td>
+                                <td>@Html.DisplayFor(modelItem => item.TipoGarantia)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Detalles)</td>
+                                <td>@Html.DisplayFor(modelItem => item.EstadoGarantia)</td>
+                                <td class="text-end">
+                                    <a asp-action="Edit" asp-route-id="@item.GarantiaID" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#usersTable').DataTable({
+                pageLength: 3,
+                lengthChange: false,
+                responsive: true,
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json'
+                },
+                dom: '<"row"<"col-sm-12 col-md-8 mb-2"><"col-sm-6 text-center"l>>' +
+                    'rt' +
+                    '<"row"<"col-sm-12 d-flex justify-content-center"p>>',
+            });
+
+            $('#searchInput').keyup(function () {
+                $('#usersTable').DataTable().search($(this).val()).draw();
+            });
+        });
+    </script>
 }
-    </tbody>
-</table>

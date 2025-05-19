@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using INTELISIS.APPCORE.EL;
 using TicketsADN7.Models;
 
-namespace TicketsADN7.Views
+namespace TicketsADN7.Controllers
 {
     public class CatalogoProveedoresController : Controller
     {

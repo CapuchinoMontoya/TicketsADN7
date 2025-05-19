@@ -54,7 +54,7 @@ namespace TicketsADN7.Views
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ReparacionID,ActivoID,Area,FechaReparacion,DescripcionProblema,TrabajoRealizado,Costo,ProveedorID,Responsable")] HistorialReparaciones historialReparaciones)
+        public async Task<IActionResult> Create([Bind("ReparacionID,EquipoID,Area,FechaReparacion,DescripcionProblema,TrabajoRealizado,Costo,ProveedorID,Responsable")] HistorialReparaciones historialReparaciones)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace TicketsADN7.Views
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ReparacionID,ActivoID,Area,FechaReparacion,DescripcionProblema,TrabajoRealizado,Costo,ProveedorID,Responsable")] HistorialReparaciones historialReparaciones)
+        public async Task<IActionResult> Edit(int id, [Bind("ReparacionID,EquipoID,Area,FechaReparacion,DescripcionProblema,TrabajoRealizado,Costo,ProveedorID,Responsable")] HistorialReparaciones historialReparaciones)
         {
             if (id != historialReparaciones.ReparacionID)
             {

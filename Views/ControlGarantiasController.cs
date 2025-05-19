@@ -54,7 +54,7 @@ namespace TicketsADN7.Views
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GarantiaID,ActivoID,ProveedorID,FechaInicioGarantia,FechaFinGarantia,TipoGarantia,Detalles,EstadoGarantia")] ControlGarantias controlGarantias)
+        public async Task<IActionResult> Create([Bind("GarantiaID,EquipoID,ProveedorID,FechaCompra,FechaInicioGarantia,FechaFinGarantia,TipoGarantia,Detalles,EstadoGarantia")] ControlGarantias controlGarantias)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace TicketsADN7.Views
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GarantiaID,ActivoID,ProveedorID,FechaInicioGarantia,FechaFinGarantia,TipoGarantia,Detalles,EstadoGarantia")] ControlGarantias controlGarantias)
+        public async Task<IActionResult> Edit(int id, [Bind("GarantiaID,EquipoID,ProveedorID,FechaCompra,FechaInicioGarantia,FechaFinGarantia,TipoGarantia,Detalles,EstadoGarantia")] ControlGarantias controlGarantias)
         {
             if (id != controlGarantias.GarantiaID)
             {

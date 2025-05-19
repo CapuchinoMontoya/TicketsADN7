@@ -70,6 +70,22 @@
                     </div>
                 </div>
             </li>
+            <!-- Nav Item - Módulo de proveedores de equipos y servicios externos -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseChecklist"
+                   aria-expanded="true" aria-controls="collapseChecklist">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Proveedores de equipos y servicios externos</span>
+                </a>
+                <div id="collapseChecklist" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Opciones</h6>
+                        <a class="collapse-item" asp-controller="CatalogoProveedores" asp-action="Index">Proveedores de equipos y servicios</a>
+                        <a class="collapse-item" asp-controller="HistorialReparaciones" asp-action="Index">Historial de reparaciones</a>
+                        <a class="collapse-item" asp-controller="ControlGarantias" asp-action="Index">Control de garantías</a>
+                    </div>
+                </div>
+            </li>
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
                 <a asp-controller="Usuarios" asp-action="Index" class="nav-link">

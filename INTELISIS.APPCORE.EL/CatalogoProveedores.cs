@@ -24,7 +24,7 @@ namespace INTELISIS.APPCORE.EL
         public string Estado { get; set; }
         public string CodigoPostal { get; set; }
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
-        public DateTime Estatus { get; set; }
+        public string Estatus { get; set; }
 
 
     }

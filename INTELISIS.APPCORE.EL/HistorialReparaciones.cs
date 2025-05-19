@@ -14,7 +14,7 @@ namespace INTELISIS.APPCORE.EL
         [Key]
         public int ReparacionID { get; set; }
         [Required(ErrorMessage = "Favor de llenar todos los datos requeridos")]
-        public int ActivoID { get; set; }
+        public int EquipoID { get; set; }
         [ForeignKey("Equipos")]
         public string Area { get; set; }
         public DateTime FechaReparacion { get; set; }
