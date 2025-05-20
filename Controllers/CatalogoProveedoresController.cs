@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using INTELISIS.APPCORE.EL;
 using TicketsADN7.Models;
+using System.Linq.Expressions;
 
 namespace TicketsADN7.Controllers
 {
@@ -34,7 +35,7 @@ namespace TicketsADN7.Controllers
             }
 
             var catalogoProveedores = await _context.CatalogoProveedores
-                .FirstOrDefaultAsync(m => m.proveedorID == id);
+                .FirstOrDefaultAsync(m => m.ProveedorID == id);
             if (catalogoProveedores == null)
             {
                 return NotFound();
@@ -54,13 +55,20 @@ namespace TicketsADN7.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("proveedorID,NombreProveedor,TipoProveedor,RFC,Telefono,CorreoElectronico,Direccion,Ciudad,Estado,CodigoPostal,FechaRegistro,Estatus")] CatalogoProveedores catalogoProveedores)
+        public async Task<IActionResult> Create([Bind("NombreProveedor,TipoProveedor,RFC,Telefono,CorreoElectronico,Direccion,Ciudad,Estado,CodigoPostal")] CatalogoProveedores catalogoProveedores)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(catalogoProveedores);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Add(catalogoProveedores);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Error al guardar: " + ex.Message);
+                }
             }
             return View(catalogoProveedores);
         }
@@ -86,9 +94,9 @@ namespace TicketsADN7.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("proveedorID,NombreProveedor,TipoProveedor,RFC,Telefono,CorreoElectronico,Direccion,Ciudad,Estado,CodigoPostal,FechaRegistro,Estatus")] CatalogoProveedores catalogoProveedores)
+        public async Task<IActionResult> Edit(int id, [Bind("ProveedorID,NombreProveedor,TipoProveedor,RFC,Telefono,CorreoElectronico,Direccion,Ciudad,Estado,CodigoPostal,FechaRegistro,Estatus")] CatalogoProveedores catalogoProveedores)
         {
-            if (id != catalogoProveedores.proveedorID)
+            if (id != catalogoProveedores.ProveedorID)
             {
                 return NotFound();
             }
@@ -102,7 +110,7 @@ namespace TicketsADN7.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CatalogoProveedoresExists(catalogoProveedores.proveedorID))
+                    if (!CatalogoProveedoresExists(catalogoProveedores.ProveedorID))
                     {
                         return NotFound();
                     }
@@ -125,7 +133,7 @@ namespace TicketsADN7.Controllers
             }
 
             var catalogoProveedores = await _context.CatalogoProveedores
-                .FirstOrDefaultAsync(m => m.proveedorID == id);
+                .FirstOrDefaultAsync(m => m.ProveedorID == id);
             if (catalogoProveedores == null)
             {
                 return NotFound();
@@ -151,7 +159,7 @@ namespace TicketsADN7.Controllers
 
         private bool CatalogoProveedoresExists(int id)
         {
-            return _context.CatalogoProveedores.Any(e => e.proveedorID == id);
+            return _context.CatalogoProveedores.Any(e => e.ProveedorID == id);
         }
     }
 }

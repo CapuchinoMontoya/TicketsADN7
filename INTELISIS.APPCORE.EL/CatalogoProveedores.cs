@@ -12,18 +12,18 @@ namespace INTELISIS.APPCORE.EL
     public class CatalogoProveedores
     {
         [Key]
-        public int proveedorID { get; set; }
+        public int ProveedorID { get; set; }
         [Required(ErrorMessage = "Favor de llenar todos los datos requeridos")]
         public string NombreProveedor { get; set; }
         public string TipoProveedor { get; set; }
         public string RFC { get; set; }
-        public int Telefono { get; set; }
+        public string Telefono { get; set; }
         public string CorreoElectronico { get; set; }
         public string Direccion { get; set; }
         public string Ciudad { get; set; }
         public string Estado { get; set; }
         public string CodigoPostal { get; set; }
-        public DateTime FechaRegistro { get; set; } = DateTime.Now;
+        public DateTime FechaRegistro { get; set; }
         public string Estatus { get; set; }
 
 
