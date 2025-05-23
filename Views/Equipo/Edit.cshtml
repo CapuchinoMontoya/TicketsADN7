@@ -1,0 +1,110 @@
+﻿@model INTELISIS.APPCORE.EL.Equipo
+
+@{
+    ViewData["Title"] = "Modificar Información del Equipo";
+}
+
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mt-4"><i class="fas fa-edit me-2 mr-3"></i>@ViewData["Title"]</h1>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Regresar
+        </a>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form asp-action="Edit" class="needs-validation" novalidate>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="EquipoID" />
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <label asp-for="Nombre" class="form-label">Nombre:</label>
+                            <span asp-validation-for="Nombre" class="text-danger small"></span>
+                            <input asp-for="Nombre" class="form-control" placeholder=" " required />
+                            <div class="invalid-feedback">
+                                Por favor ingrese el nombre del equipo
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <label asp-for="Descripcion" class="form-label">Descripción:</label>
+                            <span asp-validation-for="Descripcion" class="text-danger small"></span>
+                            <textarea asp-for="Descripcion" class="form-control" placeholder=" " style="height: 80px" required></textarea>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <label asp-for="Marca" class="form-label">Marca:</label>
+                            <span asp-validation-for="Marca" class="text-danger small"></span>
+                            <input asp-for="Marca" class="form-control" placeholder=" " required />
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <label asp-for="Modelo" class="form-label">Modelo:</label>
+                            <span asp-validation-for="Modelo" class="text-danger small"></span>
+                            <input asp-for="Modelo" class="form-control" placeholder=" " required />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <label asp-for="NumeroSerie" class="form-label">Número de serie:</label>
+                            <span asp-validation-for="NumeroSerie" class="text-danger small"></span>
+                            <input asp-for="NumeroSerie" class="form-control" placeholder=" " required />
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <label asp-for="DepartamentoID" class="form-label">Departamento asignado:</label>
+                            <span asp-validation-for="DepartamentoID" class="text-danger small"></span>
+                            <select asp-for="DepartamentoID" class="form-control" asp-items="ViewBag.DepartamentoID" required>
+                                <option value="">Seleccione un departamento</option>
+                            </select>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <label asp-for="UsuarioID" class="form-label">Usuario asignado:</label>
+                            <span asp-validation-for="UsuarioID" class="text-danger small"></span>
+                            <select asp-for="UsuarioID" class="form-control" asp-items="ViewBag.UsuarioID" required>
+                                <option value="">Seleccione un usuario</option>
+                            </select>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Código QR:</strong> Se vuelve a generar cada que modifiques un campo.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        (function () {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
+}
