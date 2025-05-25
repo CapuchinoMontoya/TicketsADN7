@@ -1,69 +1,126 @@
 ﻿@model INTELISIS.APPCORE.EL.HistorialReparaciones
 
 @{
-    ViewData["Title"] = "Delete";
+	ViewData["Title"] = "Eliminar reparación";
 }
 
-<h1>Delete</h1>
+<style>
+	.switch {
+		position: relative;
+		display: inline-block;
+		width: 60px;
+		height: 34px;
+	}
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>HistorialReparaciones</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EquipoID)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EquipoID)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Area)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Area)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaReparacion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaReparacion)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DescripcionProblema)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DescripcionProblema)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TrabajoRealizado)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TrabajoRealizado)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Costo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Costo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProveedorID)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProveedorID)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Responsable)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Responsable)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="ReparacionID" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+		.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+
+	.slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #ccc;
+		transition: .4s;
+		border-radius: 34px;
+	}
+
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 26px;
+			width: 26px;
+			left: 4px;
+			bottom: 4px;
+			background-color: white;
+			transition: .4s;
+			border-radius: 50%;
+		}
+
+	input:checked + .slider {
+		background-color: #4CAF50;
+	}
+
+		input:checked + .slider:before {
+			transform: translateX(26px);
+		}
+</style>
+
+
+<div class="container-fluid px-4">
+
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h1 class="mt-4"><i class="fas fa-user-plus me-2"></i>@ViewData["Title"]</h1>
+		<a asp-action="Index" class="btn btn-outline-secondary">
+			<i class="fas fa-arrow-left me-1"></i> Regresar
+		</a>
+	</div>
+
+	<div class="card shadow-sm mb-4">
+		<div class="card-body">
+			<h4>Registro a eliminar</h4>
+			<hr />
+			<dl class="row">
+				<dt class="col-sm-2">
+					Equipo
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.EquipoID)
+				</dd>
+				<dt class="col-sm-2">
+					Área
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Area)
+				</dd>
+				<dt class="col-sm-2">
+					Fecha de reparación
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.FechaReparacion)
+				</dd>
+				<dt class="col-sm-2">
+					Descripción del problema
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.DescripcionProblema)
+				</dd>
+				<dt class="col-sm-2">
+					Trabajo realizado
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.TrabajoRealizado)
+				</dd>
+				<dt class="col-sm-2">
+					Costo
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Costo)
+				</dd>
+				<dt class="col-sm-2">
+					Proveedor
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.ProveedorID)
+				</dd>
+				<dt class="col-sm-2">
+					Responsable
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Responsable)
+				</dd>
+			</dl>
+
+			<form asp-action="Delete">
+				<input type="hidden" asp-for="ReparacionID" />
+				<input type="submit" value="Eliminar" class="btn btn-danger" />
+			</form>
+		</div>
+	</div>
 </div>
+

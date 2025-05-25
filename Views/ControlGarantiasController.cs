@@ -22,7 +22,13 @@ namespace TicketsADN7.Views
         // GET: ControlGarantias
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ControlGarantias.ToListAsync());
+
+
+            var contexto = _context.ControlGarantias
+            .Include(r => r.Proveedor);
+
+            return View(await contexto.ToListAsync());
+            //return View(await _context.ControlGarantias.ToListAsync());
         }
 
         // GET: ControlGarantias/Details/5

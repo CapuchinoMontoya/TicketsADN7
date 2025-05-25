@@ -43,7 +43,7 @@
                             <th>Detalles</th>
                             <th>Estado de garantía</th>
                             <th>Editar</th>
-
+                            <th>Eliminar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,7 +51,7 @@
                         {
                             <tr>
                                 <td>@Html.DisplayFor(modelItem => item.EquipoID)</td>
-                                <td>@Html.DisplayFor(modelItem => item.ProveedorID)</td>
+                                <td>@(item.Proveedor != null ? item.Proveedor.NombreProveedor : "")</td>
                                 <td>@Html.DisplayFor(modelItem => item.FechaCompra)</td>
                                 <td>@Html.DisplayFor(modelItem => item.FechaInicioGarantia)</td>
                                 <td>@Html.DisplayFor(modelItem => item.FechaFinGarantia)</td>
@@ -60,6 +60,11 @@
                                 <td>@Html.DisplayFor(modelItem => item.EstadoGarantia)</td>
                                 <td class="text-end">
                                     <a asp-action="Edit" asp-route-id="@item.GarantiaID" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                                <td class="text-end">
+                                    <a asp-action="Delete" asp-route-id="@item.GarantiaID" class="btn btn-sm btn-outline-danger">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                 </td>

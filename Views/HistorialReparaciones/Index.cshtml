@@ -32,14 +32,16 @@
                 <table class="table table-striped table-hover table-bordered" id="usersTable">
                     <thead class="table-dark">
                         <tr>
-                            <th>Area</th>
-                            <th>FechaReparacion</th>
-                            <th>DescripcionProblema</th>
-                            <th>TrabajoRealizado</th>
+                            <th>Área</th>
+                            <th>Fecha de reparación</th>
+                            <th>Descripción del problema</th>
+                            <th>Trabajo realizado</th>
                             <th>Costo</th>
-                            <th>ProveedorID</th>
+                            <th>Proveedor</th>
                             <th>Responsable</th>
                             <th>Editar</th>
+                            <th>Eliminar</th>
+
 
                         </tr>
                     </thead>
@@ -52,10 +54,15 @@
                                 <td>@Html.DisplayFor(modelItem => item.DescripcionProblema)</td>
                                 <td>@Html.DisplayFor(modelItem => item.TrabajoRealizado)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Costo)</td>
-                                <td>@Html.DisplayFor(modelItem => item.ProveedorID)</td>
+                                <td>@(item.Proveedor != null ? item.Proveedor.NombreProveedor : "")</td>
                                 <td>@Html.DisplayFor(modelItem => item.Responsable)</td>
                                 <td class="text-end">
-                                    <a asp-action="Edit" asp-route-id="@item.EquipoID" class="btn btn-sm btn-outline-primary">
+                                    <a asp-action="Edit" asp-route-id="@item.ReparacionID" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                                <td class="text-end">
+                                    <a asp-action="Delete" asp-route-id="@item.ReparacionID" class="btn btn-sm btn-outline-danger">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                 </td>

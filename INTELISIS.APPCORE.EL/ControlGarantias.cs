@@ -13,16 +13,18 @@ namespace INTELISIS.APPCORE.EL
     {
         [Key]
         public int GarantiaID { get; set; }
-        [Required(ErrorMessage = "Favor de llenar todos los datos requeridos")]
-        public int EquipoID { get; set; }
         [ForeignKey("Equipos")]
-        public int ProveedorID { get; set; }
+        public int EquipoID { get; set; }
         [ForeignKey("CatalogoProveedores")]
+        public int ProveedorID { get; set; }
         public DateTime FechaCompra { get; set; }
         public DateTime FechaInicioGarantia { get; set; }
         public DateTime FechaFinGarantia { get; set; }
         public string TipoGarantia { get; set; }
         public string Detalles { get; set; }
         public string EstadoGarantia { get; set; }
+
+        [NotMapped]
+        public CatalogoProveedores Proveedor { get; set; }
     }
 }

@@ -13,7 +13,6 @@ namespace INTELISIS.APPCORE.EL
     {
         [Key]
         public int ProveedorID { get; set; }
-        [Required(ErrorMessage = "Favor de llenar todos los datos requeridos")]
         public string NombreProveedor { get; set; }
         public string TipoProveedor { get; set; }
         public string RFC { get; set; }
