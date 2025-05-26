@@ -2,71 +2,138 @@
 
 
 @{
-    ViewData["Title"] = "Edit";
+	ViewData["Title"] = "Modificar reparación";
 }
 
-<h1>Edit</h1>
+<style>
+	.switch {
+		position: relative;
+		display: inline-block;
+		width: 60px;
+		height: 34px;
+	}
 
-<h4>HistorialReparaciones</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" method="post">
-            @Html.AntiForgeryToken()
+		.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
 
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ReparacionID" />
-            <div class="form-group">
-                <label asp-for="EquipoID" class="control-label"></label>
-                <input asp-for="EquipoID" class="form-control" />
-                <span asp-validation-for="EquipoID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Area" class="control-label"></label>
-                <input asp-for="Area" class="form-control" />
-                <span asp-validation-for="Area" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaReparacion" class="control-label"></label>
-                <input asp-for="FechaReparacion" class="form-control" />
-                <span asp-validation-for="FechaReparacion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DescripcionProblema" class="control-label"></label>
-                <input asp-for="DescripcionProblema" class="form-control" />
-                <span asp-validation-for="DescripcionProblema" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TrabajoRealizado" class="control-label"></label>
-                <input asp-for="TrabajoRealizado" class="form-control" />
-                <span asp-validation-for="TrabajoRealizado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Costo" class="control-label"></label>
-                <input asp-for="Costo" class="form-control" />
-                <span asp-validation-for="Costo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProveedorID" class="control-label"></label>
-                <select asp-for="ProveedorID" class="form-control" asp-items="ViewBag.ProveedorID"></select>
-                <span asp-validation-for="ProveedorID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Responsable" class="control-label"></label>
-                <input asp-for="Responsable" class="form-control" />
-                <span asp-validation-for="Responsable" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+	.slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #ccc;
+		transition: .4s;
+		border-radius: 34px;
+	}
+
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 26px;
+			width: 26px;
+			left: 4px;
+			bottom: 4px;
+			background-color: white;
+			transition: .4s;
+			border-radius: 50%;
+		}
+
+	input:checked + .slider {
+		background-color: #4CAF50;
+	}
+
+		input:checked + .slider:before {
+			transform: translateX(26px);
+		}
+</style>
+
+
+
+<div class="container-fluid px-4">
+
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h1 class="mt-4"><i class="fas fa-user-plus me-2"></i>@ViewData["Title"]</h1>
+		<a asp-action="Index" class="btn btn-outline-secondary">
+			<i class="fas fa-arrow-left me-1"></i> Regresar
+		</a>
+	</div>
+
+	<div class="card shadow-sm mb-4">
+
+		<div class="card-header bg-white py-3">
+			<h5 class="mb-0"><i class="fas fa-user-circle me-2"></i>Información de la reparación</h5>
+		</div>
+		<div class="card-body">
+
+			<form asp-action="Edit" method="post">
+				@Html.AntiForgeryToken()
+
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<input type="hidden" asp-for="ReparacionID" />
+
+				<div class="row g-3">
+					<!-- Primera columna -->
+					<div class="col-md-6">
+						<div class="form-group">
+							<label asp-for="EquipoID" class="control-label">Equipo</label>
+							<input asp-for="EquipoID" class="form-control" />
+							<span asp-validation-for="EquipoID" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="Area" class="control-label">Área</label>
+							<input asp-for="Area" class="form-control" />
+							<span asp-validation-for="Area" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="FechaReparacion" class="control-label">Fecha de reparación</label>
+							<input asp-for="FechaReparacion" class="form-control" />
+							<span asp-validation-for="FechaReparacion" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="DescripcionProblema" class="control-label">Descripción del problema</label>
+							<input asp-for="DescripcionProblema" class="form-control" />
+							<span asp-validation-for="DescripcionProblema" class="text-danger"></span>
+						</div>
+					</div>
+					<!-- Segunda columna -->
+					<div class="col-md-6">
+						<div class="form-group">
+							<label asp-for="TrabajoRealizado" class="control-label">Trabajo realizado</label>
+							<input asp-for="TrabajoRealizado" class="form-control" />
+							<span asp-validation-for="TrabajoRealizado" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="Costo" class="control-label">Costo</label>
+							<input asp-for="Costo" class="form-control" />
+							<span asp-validation-for="Costo" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="ProveedorID" class="control-label">Proveedor</label>
+							<select asp-for="ProveedorID" class="form-control" asp-items="ViewBag.ProveedorID"></select>
+							<span asp-validation-for="ProveedorID" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="Responsable" class="control-label">Responsable</label>
+							<input asp-for="Responsable" class="form-control" />
+							<span asp-validation-for="Responsable" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<input type="submit" value="Modificar" class="btn btn-primary" />
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+	@section Scripts {
+		@{
+			await Html.RenderPartialAsync("_ValidationScriptsPartial");
+		}
+	}

@@ -1,84 +1,152 @@
 ﻿@model INTELISIS.APPCORE.EL.CatalogoProveedores
 
 @{
-    ViewData["Title"] = "Edit";
+	ViewData["Title"] = "Modificar proveedor";
 }
 
-<h1>Edit</h1>
+<style>
+	.switch {
+		position: relative;
+		display: inline-block;
+		width: 60px;
+		height: 34px;
+	}
 
-<h4>CatalogoProveedores</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ProveedorID" />
-            <div class="form-group">
-                <label asp-for="NombreProveedor" class="control-label"></label>
-                <input asp-for="NombreProveedor" class="form-control" />
-                <span asp-validation-for="NombreProveedor" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TipoProveedor" class="control-label"></label>
-                <input asp-for="TipoProveedor" class="form-control" />
-                <span asp-validation-for="TipoProveedor" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RFC" class="control-label"></label>
-                <input asp-for="RFC" class="form-control" />
-                <span asp-validation-for="RFC" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Telefono" class="control-label"></label>
-                <input asp-for="Telefono" class="form-control" />
-                <span asp-validation-for="Telefono" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CorreoElectronico" class="control-label"></label>
-                <input asp-for="CorreoElectronico" class="form-control" />
-                <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Direccion" class="control-label"></label>
-                <input asp-for="Direccion" class="form-control" />
-                <span asp-validation-for="Direccion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Ciudad" class="control-label"></label>
-                <input asp-for="Ciudad" class="form-control" />
-                <span asp-validation-for="Ciudad" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Estado" class="control-label"></label>
-                <input asp-for="Estado" class="form-control" />
-                <span asp-validation-for="Estado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CodigoPostal" class="control-label"></label>
-                <input asp-for="CodigoPostal" class="form-control" />
-                <span asp-validation-for="CodigoPostal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaRegistro" class="control-label"></label>
-                <input asp-for="FechaRegistro" class="form-control" />
-                <span asp-validation-for="FechaRegistro" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Estatus" class="control-label"></label>
-                <input asp-for="Estatus" class="form-control" />
-                <span asp-validation-for="Estatus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+		.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+
+	.slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #ccc;
+		transition: .4s;
+		border-radius: 34px;
+	}
+
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 26px;
+			width: 26px;
+			left: 4px;
+			bottom: 4px;
+			background-color: white;
+			transition: .4s;
+			border-radius: 50%;
+		}
+
+	input:checked + .slider {
+		background-color: #4CAF50;
+	}
+
+		input:checked + .slider:before {
+			transform: translateX(26px);
+		}
+</style>
+
+
+
+<div class="container-fluid px-4">
+
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h1 class="mt-4"><i class="fas fa-user-plus me-2"></i>@ViewData["Title"]</h1>
+		<a asp-action="Index" class="btn btn-outline-secondary">
+			<i class="fas fa-arrow-left me-1"></i> Regresar
+		</a>
+	</div>
+
+	<div class="card shadow-sm mb-4">
+		<div class="card-header bg-white py-3">
+			<h5 class="mb-0"><i class="fas fa-user-circle me-2"></i>Información del Proveedor</h5>
+		</div>
+		<div class="card-body">
+			<form asp-action="Edit">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<input type="hidden" asp-for="ProveedorID" />
+				<div class="row g-3">
+
+					<!-- Primera columna -->
+					<div class="col-md-6">
+						<div class="form-group">
+							<label asp-for="NombreProveedor" class="control-label">Nombre del proveedor</label>
+							<input asp-for="NombreProveedor" class="form-control" />
+							<span asp-validation-for="NombreProveedor" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="TipoProveedor" class="control-label">Tipo de proveedor</label>
+							<input asp-for="TipoProveedor" class="form-control" />
+							<span asp-validation-for="TipoProveedor" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="RFC" class="control-label">RFC</label>
+							<input asp-for="RFC" class="form-control" />
+							<span asp-validation-for="RFC" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="Telefono" class="control-label">Teléfono</label>
+							<input asp-for="Telefono" class="form-control" />
+							<span asp-validation-for="Telefono" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="CorreoElectronico" class="control-label">Correo electrónico</label>
+							<input asp-for="CorreoElectronico" class="form-control" />
+							<span asp-validation-for="CorreoElectronico" class="text-danger"></span>
+						</div>
+					</div>
+					<!-- Segunda columna -->
+					<div class="col-md-6">
+						
+						<div class="form-group">
+							<label asp-for="Direccion" class="control-label">Dirección</label>
+							<input asp-for="Direccion" class="form-control" />
+							<span asp-validation-for="Direccion" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="Ciudad" class="control-label">Ciudad</label>
+							<input asp-for="Ciudad" class="form-control" />
+							<span asp-validation-for="Ciudad" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="Estado" class="control-label">Estado</label>
+							<input asp-for="Estado" class="form-control" />
+							<span asp-validation-for="Estado" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="CodigoPostal" class="control-label">Código postal</label>
+							<input asp-for="CodigoPostal" class="form-control" />
+							<span asp-validation-for="CodigoPostal" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="FechaRegistro" class="control-label">Fecha de registro</label>
+							<input asp-for="FechaRegistro" class="form-control" />
+							<span asp-validation-for="FechaRegistro" class="text-danger"></span>
+						</div>
+						<div class="form-group">
+							<label asp-for="Estatus" class="control-label">Estatus</label>
+							<input asp-for="Estatus" class="form-control" />
+							<span asp-validation-for="Estatus" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<input type="submit" value="Modificar" class="btn btn-primary" />
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 }

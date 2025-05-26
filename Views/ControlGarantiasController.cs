@@ -22,8 +22,6 @@ namespace TicketsADN7.Views
         // GET: ControlGarantias
         public async Task<IActionResult> Index()
         {
-
-
             var contexto = _context.ControlGarantias
             .Include(r => r.Proveedor);
 
@@ -84,43 +82,109 @@ namespace TicketsADN7.Views
             {
                 return NotFound();
             }
-            return View(controlGarantias);
+
+            var viewModel = new ControlGarantiasEditViewModel
+            {
+                GarantiaID = controlGarantias.GarantiaID,
+                EquipoID = controlGarantias.EquipoID,
+                ProveedorID = controlGarantias.ProveedorID,
+                FechaCompra = controlGarantias.FechaCompra,
+                FechaInicioGarantia = controlGarantias.FechaInicioGarantia,
+                FechaFinGarantia = controlGarantias.FechaFinGarantia,
+                TipoGarantia = controlGarantias.TipoGarantia,
+                Detalles = controlGarantias.Detalles,
+                EstadoGarantia = controlGarantias.EstadoGarantia
+            };
+
+            // Preparar lista de proveedores para el dropdown
+            ViewBag.ProveedorID = new SelectList(_context.CatalogoProveedores, "ProveedorID", "NombreProveedor", viewModel.ProveedorID);
+            return View(viewModel);
         }
 
         // POST: ControlGarantias/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /* [HttpPost]
+         [ValidateAntiForgeryToken]
+         public async Task<IActionResult> Edit(int id, [Bind("GarantiaID,EquipoID,ProveedorID,FechaCompra,FechaInicioGarantia,FechaFinGarantia,TipoGarantia,Detalles,EstadoGarantia")] ControlGarantias controlGarantias)
+         {
+             if (id != controlGarantias.GarantiaID)
+             {
+                 return NotFound();
+             }
+
+             if (ModelState.IsValid)
+             {
+                 try
+                 {
+                     _context.Update(controlGarantias);
+                     await _context.SaveChangesAsync();
+                 }
+                 catch (DbUpdateConcurrencyException)
+                 {
+                     if (!ControlGarantiasExists(controlGarantias.GarantiaID))
+                     {
+                         return NotFound();
+                     }
+                     else
+                     {
+                         throw;
+                     }
+                 }
+                 return RedirectToAction(nameof(Index));
+             }
+             return View(controlGarantias);
+         }*/
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GarantiaID,EquipoID,ProveedorID,FechaCompra,FechaInicioGarantia,FechaFinGarantia,TipoGarantia,Detalles,EstadoGarantia")] ControlGarantias controlGarantias)
+        public async Task<IActionResult> Edit(int id, ControlGarantiasEditViewModel model)
         {
-            if (id != controlGarantias.GarantiaID)
-            {
+            if (id != model.GarantiaID)
                 return NotFound();
+
+            if (!ModelState.IsValid)
+            {
+                // Si el modelo no es válido, recargar proveedores para el dropdown
+                ViewBag.ProveedorID = new SelectList(_context.CatalogoProveedores, "ProveedorID", "NombreProveedor", model.ProveedorID);
+                return View(model);
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(controlGarantias);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ControlGarantiasExists(controlGarantias.GarantiaID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                // Obtener la entidad original
+                var garantia = await _context.ControlGarantias.FindAsync(id);
+                if (garantia == null)
+                    return NotFound();
+
+                // Mapear los valores actualizados del ViewModel a la entidad
+                garantia.EquipoID = model.EquipoID;
+                garantia.ProveedorID = model.ProveedorID;
+                garantia.FechaCompra = model.FechaCompra;
+                garantia.FechaInicioGarantia = model.FechaInicioGarantia;
+                garantia.FechaFinGarantia = model.FechaFinGarantia;
+                garantia.TipoGarantia = model.TipoGarantia;
+                garantia.Detalles = model.Detalles;
+                garantia.EstadoGarantia = model.EstadoGarantia;
+
+
+
+                // Guardar cambios
+                _context.Update(garantia);
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(controlGarantias);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.HistorialReparaciones.Any(e => e.ReparacionID == id))
+                    return NotFound();
+                else
+                    throw;
+            }
         }
+
+
+
 
         // GET: ControlGarantias/Delete/5
         public async Task<IActionResult> Delete(int? id)

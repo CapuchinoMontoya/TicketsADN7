@@ -23,8 +23,28 @@ namespace INTELISIS.APPCORE.EL
         public string TipoGarantia { get; set; }
         public string Detalles { get; set; }
         public string EstadoGarantia { get; set; }
-
-        [NotMapped]
         public CatalogoProveedores Proveedor { get; set; }
+    }
+
+    public class ControlGarantiasEditViewModel
+    {
+        [Key]
+        public int GarantiaID { get; set; }
+        [Required]
+        public int EquipoID { get; set; }
+        [Required]
+        public int ProveedorID { get; set; }
+        [Required]
+        public DateTime FechaCompra { get; set; }
+        [Required]
+        public DateTime FechaInicioGarantia { get; set; }
+        [Required]
+        public DateTime FechaFinGarantia { get; set; }
+        [Required]
+        public string TipoGarantia { get; set; }
+        [Required]
+        public string Detalles { get; set; }
+        [Required]
+        public string EstadoGarantia { get; set; }
     }
 }
