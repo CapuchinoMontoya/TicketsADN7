@@ -118,7 +118,7 @@
 				</dd>
 			</dl>
 
-			<form asp-action="Delete">
+			<form asp-action="Delete" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta garantía?');">
 				<input type="hidden" asp-for="GarantiaID" />
 				<input type="submit" value="Eliminar" class="btn btn-danger" />
 			</form>

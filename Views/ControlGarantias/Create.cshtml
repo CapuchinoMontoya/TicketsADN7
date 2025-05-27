@@ -1,4 +1,4 @@
-﻿@model INTELISIS.APPCORE.EL.ControlGarantias
+﻿@model INTELISIS.APPCORE.EL.ControlGarantiasEditViewModel
 
 @{
 	ViewData["Title"] = "Registrar garantía";
@@ -81,22 +81,24 @@
 						</div>
 						<div class="form-group">
 							<label asp-for="ProveedorID" class="control-label">Proveedor</label>
-							<input asp-for="ProveedorID" class="form-control" />
+							<select asp-for="ProveedorID" class="form-control" asp-items="ViewBag.ProveedorID">
+								<option value="">-- Seleccionar --</option>
+							</select>
 							<span asp-validation-for="ProveedorID" class="text-danger"></span>
 						</div>
 						<div class="form-group">
 							<label asp-for="FechaCompra" class="control-label">Fecha de compra del equipo</label>
-							<input asp-for="FechaCompra" class="form-control" />
+							<input asp-for="FechaCompra" class="form-control" type="date" />
 							<span asp-validation-for="FechaCompra" class="text-danger"></span>
 						</div>
 						<div class="form-group">
 							<label asp-for="FechaInicioGarantia" class="control-label">Fecha de activación de la garantía</label>
-							<input asp-for="FechaInicioGarantia" class="form-control" />
+							<input asp-for="FechaInicioGarantia" class="form-control" type="date" />
 							<span asp-validation-for="FechaInicioGarantia" class="text-danger"></span>
 						</div>
 						<div class="form-group">
 							<label asp-for="FechaFinGarantia" class="control-label">Fecha de término de la garantía</label>
-							<input asp-for="FechaFinGarantia" class="form-control" />
+							<input asp-for="FechaFinGarantia" class="form-control" type="date" />
 							<span asp-validation-for="FechaFinGarantia" class="text-danger"></span>
 						</div>
 
@@ -120,13 +122,14 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<input type="submit" value="Create" class="btn btn-primary" />
+						<input type="submit" value="Agregar" class="btn btn-primary" />
 					</div>
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
+
 
 @section Scripts {
 	@{

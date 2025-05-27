@@ -1,4 +1,4 @@
-﻿@model INTELISIS.APPCORE.EL.HistorialReparaciones
+﻿@model INTELISIS.APPCORE.EL.HistorialReparacionesEditViewModel
 
 @{
 	ViewData["Title"] = "Registrar reparación";
@@ -84,7 +84,7 @@
 						</div>
 						<div class="form-group">
 							<label asp-for="FechaReparacion" class="control-label">Fecha de la reparación</label>
-							<input asp-for="FechaReparacion" class="form-control" />
+							<input asp-for="FechaReparacion" class="form-control" type="date" />
 							<span asp-validation-for="FechaReparacion" class="text-danger"></span>
 						</div>
 						<div class="form-group">
@@ -106,8 +106,10 @@
 							<span asp-validation-for="Costo" class="text-danger"></span>
 						</div>
 						<div class="form-group">
-							<label asp-for="ProveedorID" class="control-label">Proveedor</label>
-							<input asp-for="ProveedorID" class="form-control" />
+							<label asp-for="ProveedorID" class="control-label"></label>
+							<select asp-for="ProveedorID" class="form-control" asp-items="ViewBag.ProveedorID">
+								<option value="">-- Seleccionar --</option>
+							</select>
 							<span asp-validation-for="ProveedorID" class="text-danger"></span>
 						</div>
 						<div class="form-group">

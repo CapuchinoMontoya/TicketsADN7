@@ -14,15 +14,27 @@ namespace INTELISIS.APPCORE.EL
         [Key]
         public int GarantiaID { get; set; }
         [ForeignKey("Equipos")]
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public int EquipoID { get; set; }
         [ForeignKey("CatalogoProveedores")]
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public int ProveedorID { get; set; }
+        [Required(ErrorMessage = "El campo es obligatorio")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime FechaCompra { get; set; }
+        [Required(ErrorMessage = "El campo es obligatorio")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime FechaInicioGarantia { get; set; }
+        [Required(ErrorMessage = "El campo es obligatorio")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime FechaFinGarantia { get; set; }
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public string TipoGarantia { get; set; }
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public string Detalles { get; set; }
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public string EstadoGarantia { get; set; }
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public CatalogoProveedores Proveedor { get; set; }
     }
 
@@ -30,21 +42,21 @@ namespace INTELISIS.APPCORE.EL
     {
         [Key]
         public int GarantiaID { get; set; }
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public int EquipoID { get; set; }
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public int ProveedorID { get; set; }
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public DateTime FechaCompra { get; set; }
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public DateTime FechaInicioGarantia { get; set; }
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public DateTime FechaFinGarantia { get; set; }
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public string TipoGarantia { get; set; }
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public string Detalles { get; set; }
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public string EstadoGarantia { get; set; }
     }
 }

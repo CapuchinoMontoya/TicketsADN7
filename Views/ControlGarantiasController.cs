@@ -50,6 +50,7 @@ namespace TicketsADN7.Views
         // GET: ControlGarantias/Create
         public IActionResult Create()
         {
+            ViewData["ProveedorID"] = new SelectList(_context.CatalogoProveedores, "ProveedorID", "NombreProveedor");
             return View();
         }
 
@@ -58,16 +59,31 @@ namespace TicketsADN7.Views
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GarantiaID,EquipoID,ProveedorID,FechaCompra,FechaInicioGarantia,FechaFinGarantia,TipoGarantia,Detalles,EstadoGarantia")] ControlGarantias controlGarantias)
+        public async Task<IActionResult> Create(ControlGarantiasEditViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(controlGarantias);
+                var controlGarantia = new ControlGarantias
+                {
+                    EquipoID = model.EquipoID,
+                    ProveedorID = model.ProveedorID,
+                    FechaCompra = model.FechaCompra,
+                    FechaInicioGarantia = model.FechaInicioGarantia,
+                    FechaFinGarantia = model.FechaFinGarantia,
+                    TipoGarantia = model.TipoGarantia,
+                    Detalles = model.Detalles,
+                    EstadoGarantia = model.EstadoGarantia
+                };
+
+                _context.Add(controlGarantia);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(controlGarantias);
+
+            ViewData["ProveedorID"] = new SelectList(_context.CatalogoProveedores, "ProveedorID", "NombreProveedor");
+            return View(model);
         }
+
 
         // GET: ControlGarantias/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -104,37 +120,6 @@ namespace TicketsADN7.Views
         // POST: ControlGarantias/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        /* [HttpPost]
-         [ValidateAntiForgeryToken]
-         public async Task<IActionResult> Edit(int id, [Bind("GarantiaID,EquipoID,ProveedorID,FechaCompra,FechaInicioGarantia,FechaFinGarantia,TipoGarantia,Detalles,EstadoGarantia")] ControlGarantias controlGarantias)
-         {
-             if (id != controlGarantias.GarantiaID)
-             {
-                 return NotFound();
-             }
-
-             if (ModelState.IsValid)
-             {
-                 try
-                 {
-                     _context.Update(controlGarantias);
-                     await _context.SaveChangesAsync();
-                 }
-                 catch (DbUpdateConcurrencyException)
-                 {
-                     if (!ControlGarantiasExists(controlGarantias.GarantiaID))
-                     {
-                         return NotFound();
-                     }
-                     else
-                     {
-                         throw;
-                     }
-                 }
-                 return RedirectToAction(nameof(Index));
-             }
-             return View(controlGarantias);
-         }*/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ControlGarantiasEditViewModel model)
@@ -182,9 +167,6 @@ namespace TicketsADN7.Views
                     throw;
             }
         }
-
-
-
 
         // GET: ControlGarantias/Delete/5
         public async Task<IActionResult> Delete(int? id)

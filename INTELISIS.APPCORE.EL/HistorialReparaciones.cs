@@ -17,6 +17,7 @@ namespace INTELISIS.APPCORE.EL
         //[ForeignKey("EquipoID")]
         public int EquipoID { get; set; }
         public string Area { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime FechaReparacion { get; set; }
         public string DescripcionProblema { get; set; }
         public string TrabajoRealizado { get; set; }
@@ -36,29 +37,30 @@ namespace INTELISIS.APPCORE.EL
         [Key]
         public int ReparacionID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public int EquipoID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public string Area { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio")]
         [DataType(DataType.Date)]
         public DateTime FechaReparacion { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public string DescripcionProblema { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public string TrabajoRealizado { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio")]
+        [RegularExpression(@"^\d+(\.\d{1,2})?$", ErrorMessage = "Valor no válido, debe ser un número decimal válido.")]
         public decimal Costo { get; set; }
 
         [Required(ErrorMessage = "El campo Proveedor es obligatorio")]
         public int ProveedorID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio")]
         public string Responsable { get; set; }
     }
 

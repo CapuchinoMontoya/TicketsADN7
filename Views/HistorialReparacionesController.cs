@@ -48,6 +48,7 @@ namespace TicketsADN7.Views
         // GET: HistorialReparaciones/Create
         public IActionResult Create()
         {
+            ViewData["ProveedorID"] = new SelectList(_context.CatalogoProveedores, "ProveedorID", "NombreProveedor");
             return View();
         }
 
@@ -56,42 +57,33 @@ namespace TicketsADN7.Views
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ReparacionID,EquipoID,Area,FechaReparacion,DescripcionProblema,TrabajoRealizado,Costo,ProveedorID,Responsable")] HistorialReparaciones historialReparaciones)
+        public async Task<IActionResult> Create(HistorialReparacionesEditViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(historialReparaciones);
+                var HRep = new HistorialReparaciones
+                {
+                    ReparacionID = model.ReparacionID,
+                    EquipoID = model.EquipoID,
+                    Area = model.Area,
+                    FechaReparacion = model.FechaReparacion,
+                    DescripcionProblema = model.DescripcionProblema,
+                    TrabajoRealizado =  model.TrabajoRealizado,
+                    Costo = model.Costo,
+                    ProveedorID = model.ProveedorID,
+                    Responsable = model.Responsable
+                };
+                _context.Add(HRep);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(historialReparaciones);
+
+            ViewData["ProveedorID"] = new SelectList(_context.CatalogoProveedores, "ProveedorID", "NombreProveedor");
+            return View(model);
         }
 
-        // GET: HistorialReparaciones/Edit/5
-        /*public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var historialReparaciones = await _context.HistorialReparaciones.FindAsync(id);
-            if (historialReparaciones == null)
-            {
-                return NotFound();
-            }
-            return View(historialReparaciones);
-        }*/
-        /*public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null) return NotFound();
 
-            var historial = await _context.HistorialReparaciones.FindAsync(id);
-            if (historial == null) return NotFound();
-
-            ViewBag.ProveedorID = new SelectList(_context.CatalogoProveedores, "ProveedorID", "NombreProveedor", historial.ProveedorID);
-            return View(historial);
-        }*/
         // GET: HistorialReparaciones/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -122,129 +114,6 @@ namespace TicketsADN7.Views
             return View(viewModel);
         }
 
-
-        // POST: HistorialReparaciones/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        /*[HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ReparacionID,EquipoID,Area,FechaReparacion,DescripcionProblema,TrabajoRealizado,Costo,ProveedorID,Responsable")] HistorialReparaciones historialReparaciones)
-        {
-            if (id != historialReparaciones.ReparacionID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(historialReparaciones);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!HistorialReparacionesExists(historialReparaciones.ReparacionID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(historialReparaciones);
-        }*/
-        /* [HttpPost]
-         [ValidateAntiForgeryToken]
-         public async Task<IActionResult> Edit(int id, HistorialReparaciones historialReparaciones)
-         {
-             if (id != historialReparaciones.ReparacionID)
-             {
-                 return NotFound();
-             }
-
-             if (ModelState.IsValid)
-             {
-                 try
-                 {
-                     _context.Update(historialReparaciones);
-                     await _context.SaveChangesAsync();
-                     return RedirectToAction(nameof(Index));
-                 }
-                 catch (DbUpdateConcurrencyException)
-                 {
-                     if (!HistorialReparacionesExists(historialReparaciones.ReparacionID))
-                     {
-                         return NotFound();
-                     }
-                     else
-                     {
-                         throw;
-                     }
-                 }
-             }
-
-             // Volver a cargar el ViewBag si hay error para que el dropdown funcione
-             ViewBag.ProveedorID = new SelectList(_context.CatalogoProveedores, "ProveedorID", "NombreProveedor", historialReparaciones.ProveedorID);
-
-             return View(historialReparaciones);
-         }*/
-
-        /*[HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, HistorialReparaciones historialReparaciones)
-        {
-            if (id != historialReparaciones.ReparacionID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var registroExistente = await _context.HistorialReparaciones.FindAsync(id);
-                    if (registroExistente == null)
-                    {
-                        return NotFound();
-                    }
-
-                    // Asignamos los valores actualizados
-                    registroExistente.EquipoID = historialReparaciones.EquipoID;
-                    registroExistente.Area = historialReparaciones.Area;
-                    registroExistente.FechaReparacion = historialReparaciones.FechaReparacion;
-                    registroExistente.DescripcionProblema = historialReparaciones.DescripcionProblema;
-                    registroExistente.TrabajoRealizado = historialReparaciones.TrabajoRealizado;
-                    registroExistente.Costo = historialReparaciones.Costo;
-                    registroExistente.ProveedorID = historialReparaciones.ProveedorID;
-                    registroExistente.Responsable = historialReparaciones.Responsable;
-
-                    await _context.SaveChangesAsync();
-
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!HistorialReparacionesExists(historialReparaciones.ReparacionID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-            }
-
-            // Recargar dropdown si hay error
-            ViewBag.ProveedorID = new SelectList(_context.CatalogoProveedores, "ProveedorID", "NombreProveedor", historialReparaciones.ProveedorID);
-            return View(historialReparaciones);
-        }
-
-        */
         // POST: HistorialReparaciones/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]

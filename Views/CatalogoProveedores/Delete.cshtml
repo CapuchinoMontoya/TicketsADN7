@@ -135,7 +135,7 @@
 				</dd>
 			</dl>
 
-			<form asp-action="Delete">
+			<form asp-action="Delete" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este proveedor?');">
 				<input type="hidden" asp-for="ProveedorID" />
 				<input type="submit" value="Eliminar" class="btn btn-danger" />
 			</form>

@@ -53,7 +53,7 @@ namespace TicketsADN7.Controllers
         // POST: CatalogoProveedores/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        /*[HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("NombreProveedor,TipoProveedor,RFC,Telefono,CorreoElectronico,Direccion,Ciudad,Estado,CodigoPostal")] CatalogoProveedores catalogoProveedores)
         {
@@ -71,7 +71,31 @@ namespace TicketsADN7.Controllers
                 }
             }
             return View(catalogoProveedores);
+        }*/
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("NombreProveedor,TipoProveedor,RFC,Telefono,CorreoElectronico,Direccion,Ciudad,Estado,CodigoPostal")] CatalogoProveedores catalogoProveedores)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Asegurar que el campo obligatorio Estatus tiene un valor
+                    catalogoProveedores.Estatus = "Activo";
+
+                    _context.Add(catalogoProveedores);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    var errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                    ModelState.AddModelError("", "Error al guardar: " + errorMessage);
+                }
+            }
+            return View(catalogoProveedores);
         }
+
 
         // GET: CatalogoProveedores/Edit/5
         public async Task<IActionResult> Edit(int? id)

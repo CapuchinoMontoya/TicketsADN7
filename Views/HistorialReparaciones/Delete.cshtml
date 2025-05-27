@@ -116,7 +116,7 @@
 				</dd>
 			</dl>
 
-			<form asp-action="Delete">
+			<form asp-action="Delete" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
 				<input type="hidden" asp-for="ReparacionID" />
 				<input type="submit" value="Eliminar" class="btn btn-danger" />
 			</form>

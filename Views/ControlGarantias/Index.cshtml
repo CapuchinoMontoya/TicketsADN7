@@ -10,7 +10,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mt-4"><i class="fas fa-users me-2"></i>@ViewData["Title"]</h1>
         <a asp-action="Create" class="btn btn-primary">
-            <i class="fas fa-plus me-1"></i> Nueva grantía
+            <i class="fas fa-plus me-1"></i> Nueva garantía
         </a>
     </div>
 
@@ -38,7 +38,7 @@
                             <th>Proveedor</th>
                             <th>Fecha de compra</th>
                             <th>Fecha de inicio de garantía</th>
-                            <th>Correo Fecha de fin de garantía</th>
+                            <th>Fecha de fin de garantía</th>
                             <th>Tipo de garantía</th>
                             <th>Detalles</th>
                             <th>Estado de garantía</th>
@@ -65,7 +65,7 @@
                                 </td>
                                 <td class="text-end">
                                     <a asp-action="Delete" asp-route-id="@item.GarantiaID" class="btn btn-sm btn-outline-danger">
-                                        <i class="fas fa-edit"></i>
+                                        <i class="fas fa-eraser"></i>
                                     </a>
                                 </td>
                             </tr>
