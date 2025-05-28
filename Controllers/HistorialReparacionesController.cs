@@ -5,7 +5,7 @@ using TicketsADN7.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 
-namespace TicketsADN7.Views
+namespace TicketsADN7.Controllers
 {
     public class HistorialReparacionesController : Controller
     {
