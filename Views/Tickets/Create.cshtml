@@ -1,88 +1,138 @@
 ﻿@model INTELISIS.APPCORE.EL.Ticket
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Nuevo Ticket";
 }
 
-<h1>Create</h1>
 
-<h4>Ticket</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Titulo" class="control-label"></label>
-                <input asp-for="Titulo" class="form-control" />
-                <span asp-validation-for="Titulo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Descripcion" class="control-label"></label>
-                <input asp-for="Descripcion" class="form-control" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RutaArchivo" class="control-label"></label>
-                <input asp-for="RutaArchivo" class="form-control" />
-                <span asp-validation-for="RutaArchivo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaCreacion" class="control-label"></label>
-                <input asp-for="FechaCreacion" class="form-control" />
-                <span asp-validation-for="FechaCreacion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaCierre" class="control-label"></label>
-                <input asp-for="FechaCierre" class="form-control" />
-                <span asp-validation-for="FechaCierre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoriaID" class="control-label"></label>
-                <select asp-for="CategoriaID" class ="form-control" asp-items="ViewBag.CategoriaID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="PrioridadID" class="control-label"></label>
-                <select asp-for="PrioridadID" class ="form-control" asp-items="ViewBag.PrioridadID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="EstadoID" class="control-label"></label>
-                <select asp-for="EstadoID" class ="form-control" asp-items="ViewBag.EstadoID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="UsuarioReporteID" class="control-label"></label>
-                <select asp-for="UsuarioReporteID" class ="form-control" asp-items="ViewBag.UsuarioReporteID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="UsuarioAsignadoID" class="control-label"></label>
-                <select asp-for="UsuarioAsignadoID" class ="form-control" asp-items="ViewBag.UsuarioAsignadoID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="DepartamentoID" class="control-label"></label>
-                <select asp-for="DepartamentoID" class ="form-control" asp-items="ViewBag.DepartamentoID"></select>
-            </div>
-            <div class="form-group">
-                <label>Checklist (opcional)</label>
-                <select class="form-control" name="checklistId">
-                    <option value="">-- Sin Checklist --</option>
-                    @foreach (var item in (SelectList)ViewBag.Checklists)
-                    {
-                        <option value="@item.Value">@item.Text</option>
-                    }
-                </select>
-            </div>
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mt-4"><i class="fas fa-ticket-alt me-2"></i>@ViewData["Title"]</h1>
+        <a asp-action="MisTickets" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Regresar
+        </a>
+    </div>
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Información del Ticket</h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" class="needs-validation" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="row g-3">
+                    <!-- Primera columna -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Titulo" class="form-control" placeholder=" " required />
+                            <label asp-for="Titulo" class="form-label"></label>
+                            <span asp-validation-for="Titulo" class="text-danger small"></span>
+                            <div class="invalid-feedback">
+                                Por favor ingrese un título para el ticket
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <textarea asp-for="Descripcion" class="form-control" placeholder=" " style="height: 150px;" required></textarea>
+                            <label asp-for="Descripcion" class="form-label"></label>
+                            <span asp-validation-for="Descripcion" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="RutaArchivo" class="form-label"></label>
+                            <div class="file-upload">
+                                <label class="file-upload-label">
+                                    <i class="fas fa-paperclip me-2"></i>Seleccionar archivo
+                                    <input type="file" name="archivoAdjunto" class="file-upload-input" />
+                                </label>
+                                <span id="nombreArchivo" class="ms-2 small text-muted">Ningún archivo seleccionado</span>
+                            </div>
+                            <input type="hidden" asp-for="RutaArchivo" />
+                            <small class="form-text text-muted">Formatos soportados: PDF, DOCX, XLSX, JPG, PNG (Max. 5MB)</small>
+                            <span asp-validation-for="RutaArchivo" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Segunda columna -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <select asp-for="CategoriaID" class="form-control select2" asp-items="ViewBag.CategoriaID" required>
+                                <option value="">Seleccione una categoría</option>
+                            </select>
+                            <label asp-for="CategoriaID" class="form-label"></label>
+                            <span asp-validation-for="CategoriaID" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <select asp-for="DepartamentoID" class="form-control select2" asp-items="ViewBag.DepartamentoID" required>
+                                <option value="">Seleccione un departamento</option>
+                            </select>
+                            <label asp-for="DepartamentoID" class="form-label"></label>
+                            <span asp-validation-for="DepartamentoID" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <select class="form-control select2" name="checklistId">
+                                <option value="">-- Sin Checklist --</option>
+                                @foreach (var item in (SelectList)ViewBag.Checklists)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                            <label>Checklist (opcional)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <button type="reset" class="btn btn-outline-secondary me-md-2">
+                        <i class="fas fa-undo me-1"></i> Limpiar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> Crear Ticket
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Mostrar nombre del archivo seleccionado
+        document.querySelector('.file-upload-input').addEventListener('change', function () {
+            const fileName = this.files.length > 0 ? this.files[0].name : 'Ningún archivo seleccionado';
+            document.getElementById('nombreArchivo').textContent = fileName;
+        });
+
+        // Configurar fechas automáticamente
+        document.addEventListener('DOMContentLoaded', function () {
+            const now = new Date();
+            const fechaCreacion = now.toISOString().slice(0, 16);
+
+            // Si el modelo no tiene fecha de creación, la establecemos a ahora
+            if (!document.getElementById('FechaCreacion').value) {
+                document.getElementById('FechaCreacion').value = fechaCreacion;
+            }
+        });
+    </script>
+    <script>
+        (function () {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
 }

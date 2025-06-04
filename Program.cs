@@ -10,6 +10,7 @@ using WHATSAPPSERVICES;
 using INTELISIS.APPCORE.BL;
 using EmailService;
 using LIBRARY.COMMON.Crypto;
+using TicketsADN7.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +62,8 @@ builder.Services.AddScoped<IViewRenderService, ViewRenderService>();
 
 //Servicios
 builder.Services.AddHostedService<TicketGeneratorService>();
+builder.Services.AddSignalR();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 
 var app = builder.Build();
@@ -98,7 +101,7 @@ app.UseStatusCodePages(async context => {
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.MapControllerRoute(
     name: "default",

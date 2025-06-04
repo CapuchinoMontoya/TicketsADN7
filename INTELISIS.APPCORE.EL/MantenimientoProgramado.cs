@@ -21,11 +21,16 @@ namespace INTELISIS.APPCORE.EL
         public string Categoria { get; set; }
 
         [Required]
+        [StringLength(150)]
+        public string Departamento { get; set; }
+
+        public int? ChecklistId { get; set; }
+
+        [Required]
         public int FrecuenciaDias { get; set; }
 
         public DateTime? FechaUltimaRevision { get; set; }
 
-        [Required]
         public DateTime FechaProximaRevision { get; set; }
 
         public bool Activo { get; set; } = true;

@@ -1,8 +1,195 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Inicio";
+    Layout = "_Layout"; // Asegúrate de que use tu layout
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Hero Section -->
+<div class="hero-section bg-gradient-primary-to-secondary text-white py-5">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 font-weight-bold mb-4">Bienvenido al Sistema de Tickets</h1>
+                <p class="lead mb-4">Gestión eficiente de incidencias y solicitudes de soporte</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="@Url.Action("Create", "Tickets")" class="btn btn-light btn-lg shadow-sm">
+                        <i class="fas fa-plus-circle mr-2"></i>Nuevo Ticket
+                    </a>
+                    <a href="@Url.Action("MisTickets", "Tickets")" class="btn btn-outline-light btn-lg shadow-sm">
+                        <i class="fas fa-ticket-alt mr-2"></i>Ver Mis Tickets
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-6 d-none d-lg-block">
+                <img src="~/img/ticket-de-soporte.png" alt="Sistema de Tickets" class="img-fluid" style="max-width: 300px;">
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Quick Stats Section -->
+<div class="quick-stats py-5 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4 mb-4 mb-md-0">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <div class="icon-circle bg-primary text-white mb-3">
+                            <i class="fas fa-tasks fa-2x"></i>
+                        </div>
+                        <h3 class="h5">Gestión Simplificada</h3>
+                        <p class="mb-0">Sistema intuitivo para registrar y seguir tus tickets</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4 mb-md-0">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <div class="icon-circle bg-success text-white mb-3">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                        <h3 class="h5">Respuesta Rápida</h3>
+                        <p class="mb-0">El equipo asignado trabaja para resolver tus solicitudes</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <div class="icon-circle bg-info text-white mb-3">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                        </div>
+                        <h3 class="h5">Seguimiento en Tiempo Real</h3>
+                        <p class="mb-0">Monitorea el estado de tus tickets en cualquier momento</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity Section -->
+<div class="recent-activity py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center mb-5">
+                <h2 class="h3 section-title">¿Cómo funciona nuestro sistema?</h2>
+                <p class="lead text-muted">Sigue estos simples pasos para gestionar tus tickets eficientemente</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="timeline-steps">
+                    <div class="timeline-step">
+                        <div class="timeline-content">
+                            <div class="inner-circle bg-primary"></div>
+                            <h4 class="h5 mb-0">1. Crear Ticket</h4>
+                            <p class="text-muted mb-0">Describe tu solicitud o problema</p>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-content">
+                            <div class="inner-circle bg-warning"></div>
+                            <h4 class="h5 mb-0">2. Asignación</h4>
+                            <p class="text-muted mb-0">Un equipo de tu empresa asignará el ticket</p>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-content">
+                            <div class="inner-circle bg-info"></div>
+                            <h4 class="h5 mb-0">3. En Proceso</h4>
+                            <p class="text-muted mb-0">El equipo trabaja en la solución</p>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-content">
+                            <div class="inner-circle bg-success"></div>
+                            <h4 class="h5 mb-0">4. Resolución</h4>
+                            <p class="text-muted mb-0">Recibirás notificación cuando se resuelva</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+<div class="cta-section bg-dark text-white py-5">
+    <div class="container py-4 text-center">
+        <h2 class="h3 mb-4">¿Necesitas ayuda inmediata?</h2>
+        <a href="https://wa.me/524494790406?text=Hola,%20necesito%20ayuda%20con%20el%20sistema%20de%20tickets.%20Mi%20ID%20de%20usuario%20es:%20[POR%20FAVOR%20INDICA%20TU%20USUARIO]"
+           class="btn btn-success btn-lg px-4"
+           target="_blank">
+            <i class="fab fa-whatsapp mr-2"></i>Contactar por WhatsApp
+        </a>
+        <p class="mt-3 mb-0 small text-muted">Horario de soporte: Lunes a Viernes, 9:00 AM - 6:00 PM</p>
+    </div>
+</div>
+
+<style>
+    /* Estilos personalizados */
+    .hero-section {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        border-radius: 0 0 20px 20px;
+    }
+
+    .icon-circle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+    }
+
+    .timeline-steps {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .timeline-step {
+        flex: 1;
+        min-width: 200px;
+        text-align: center;
+        position: relative;
+        padding: 0 15px;
+    }
+
+        .timeline-step:not(:last-child):after {
+            content: "";
+            position: absolute;
+            top: 30px;
+            left: 75%;
+            width: 50%;
+            height: 2px;
+            background-color: #e9ecef;
+        }
+
+    .timeline-content {
+        padding: 20px 0;
+    }
+
+    .inner-circle {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin: 0 auto 10px;
+    }
+
+    .cta-section {
+        background-color: #5a5c69;
+        border-radius: 20px 20px 0 0;
+    }
+
+    @@media (max-width: 768px) {
+        .timeline-step {
+            flex: 100%;
+            margin-bottom: 20px;
+        }
+
+            .timeline-step:not(:last-child):after {
+                display: none;
+            }
+    }
+</style>

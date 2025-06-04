@@ -1,0 +1,90 @@
+﻿@model ChecklistContestadoViewModel
+@using INTELISIS.APPCORE.EL
+
+@functions {
+    private string GetIconClass(TipoCampo tipo)
+    {
+        return tipo switch
+        {
+            TipoCampo.Checkbox => "bi-check-square",
+            TipoCampo.Texto => "bi-card-text",
+            TipoCampo.Cantidad => "bi-123",
+            TipoCampo.Fecha => "bi-calendar-event",
+            TipoCampo.Archivo => "bi-paperclip",
+            _ => "bi-question-circle"
+        };
+    }
+
+    private string FormatValue(TipoCampo tipo, string valor)
+    {
+        if (string.IsNullOrEmpty(valor)) return "No contestado";
+
+        return tipo switch
+        {
+            TipoCampo.Checkbox => valor == "true" ? "Sí" : "No",
+            TipoCampo.Archivo => $"<a href='{valor}' target='_blank' class='btn btn-sm btn-outline-primary'><i class='bi bi-download'></i> Descargar</a>",
+            _ => valor
+        };
+    }
+}
+
+<div class="container my-4">
+    <div class="card shadow border-0">
+        <div class="card-header bg-gradient bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="bi-list-check me-2"></i>Checklist: @Model.NombreChecklist
+            </h4>
+        </div>
+        <div class="card-body">
+            <p class="text-muted">@Model.DescripcionChecklist</p>
+
+            <div class="row g-4">
+                @foreach (var campo in Model.Campos)
+                {
+                    <div class="col-12 col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="bi @GetIconClass(campo.Tipo) me-1 text-primary"></i>
+                                    @campo.Nombre
+                                    @if (campo.RequiereEvidencia)
+                                    {
+                                        <span class="text-danger">*</span>
+                                    }
+                                </h5>
+
+                                <div class="card-text mt-3">
+                                    @if (campo.Tipo == TipoCampo.Archivo && !string.IsNullOrEmpty(campo.Valor) && campo.Valor != "Error")
+                                    {
+
+                                        <a href="@Url.Content($"~/checklist/{System.IO.Path.GetFileName(campo.Valor)}")" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-download"></i> Ver evidencia adjunta
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <p class="@(string.IsNullOrEmpty(campo.Valor) ? "text-muted" : "")">
+                                            @FormatValue(campo.Tipo, campo.Valor)
+                                        </p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="text-end mt-4">
+                <a href="@Url.Action("GestionarTickets")" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>Volver
+                </a>
+                <form asp-action="FinalizarTicket" method="post" class="d-inline">
+                    <input type="hidden" name="ticketId" value="@Model.TicketId" />
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle me-2"></i>Liberar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

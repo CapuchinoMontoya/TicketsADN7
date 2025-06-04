@@ -70,7 +70,23 @@
                                     @Html.DisplayFor(modelItem => item.Descripcion)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.RutaArchivo)
+                                    @{
+                                        var ruta = item.RutaArchivo;
+                                        string nombreLimpio = "";
+                                        string rutaWeb = "#";
+
+                                        if (!string.IsNullOrEmpty(ruta))
+                                        {
+                                            var archivo = System.IO.Path.GetFileName(ruta);
+                                            var indexGuion = archivo.IndexOf('-');
+                                            nombreLimpio = indexGuion >= 0 ? archivo.Substring(0, indexGuion) : archivo;
+
+                                            rutaWeb = Url.Content($"~/uploads/{archivo}");
+                                            <a href="@rutaWeb" target="_blank">
+                                                <i class="fas fa-download me-2"></i>@nombreLimpio
+                                            </a>
+                                        }
+                                    }
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.FechaCreacion)
@@ -108,11 +124,11 @@
     <script>
         $(document).ready(function () {
             $('#ticketsTable').DataTable({
-                pageLength: 3,
+                pageLength: 5,
                 lengthChange: false,
                 responsive: true,
                 language: {
-                    url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json'
+                    url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json'
                 },
                 dom: '<"row"<"col-sm-12 col-md-8 mb-2"><"col-sm-6 text-center"l>>' +
                     'rt' +

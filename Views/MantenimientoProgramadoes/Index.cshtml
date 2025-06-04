@@ -17,14 +17,34 @@
                     <h5 class="modal-title" id="modalLabel">Nuevo Mantenimiento</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body"> 
                     <div class="mb-3">
-                        <label>Nombre del equipo o área</label>
+                        <label>Nombre</label>
                         <input type="text" id="nombre" class="form-control" required />
                     </div>
                     <div class="mb-3">
                         <label>Categoría</label>
-                        <input type="text" id="categoria" class="form-control" required />
+                        <div class="form-floating mb-3">
+                            <select id="categoria" class="form-control" asp-items="ViewBag.CategoriaID" required>
+                                <option value="">Seleccione una categoría</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Departamento</label>
+                        <div class="form-floating mb-3">
+                            <select id="Departamento" class="form-control" asp-items="ViewBag.DepartamentoID" required>
+                                <option value="">Seleccione un departamento</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Checklist (Opcional)</label>
+                        <div class="form-floating mb-3">
+                            <select id="ChecklistId" class="form-control" asp-items="ViewBag.ChecklistID">
+                                <option value="">-- Sin Checklist --</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label>Frecuencia</label>
@@ -81,18 +101,26 @@
                 var frecuencia = parseInt(this.value);
                 var divFechaLimite = document.getElementById('divFechaLimite');
                 if (frecuencia === 0) {
+                    const hoy = new Date();
+                    const fechaHoy = hoy.toISOString().split('T')[0];
+                    document.getElementById('fechaRevision').value = fechaHoy;
                     divFechaLimite.style.display = 'none';
                 } else {
                     divFechaLimite.style.display = 'block';
+                    const hoy = new Date();
+                    const fechaHoy = hoy.toISOString().split('T')[0]; 
+                    document.getElementById('fechaRevision').value = fechaHoy;
                 }
             });
 
             document.getElementById('formNuevoMantenimiento').addEventListener('submit', function (e) {
                 e.preventDefault();
-
+                var checklistValue = document.getElementById('ChecklistId').value;
                 var data = {
                     Nombre: document.getElementById('nombre').value,
                     Categoria: document.getElementById('categoria').value,
+                    Departamento: document.getElementById('Departamento').value,
+                    ChecklistId: checklistValue !== '' ? checklistValue : null,
                     FrecuenciaDias: document.getElementById('frecuencia').value,
                     FechaProximaRevision: document.getElementById('fechaRevision').value,
                     FechaUltimaRevision: document.getElementById('fechaLimite').value || null

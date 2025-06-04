@@ -44,6 +44,7 @@ namespace INTELISIS.APPCORE.EL
         public bool Activo { get; set; } = true;
 
         [StringLength(20, ErrorMessage = "El teléfono no puede exceder 10 caracteres")]
+        [RegularExpression(@"^\+\d{1,4}\d{10}$", ErrorMessage = "Teléfono inválido")]
         [Display(Name = "No. Teléfono")]
         public string Telefono { get; set; }
 

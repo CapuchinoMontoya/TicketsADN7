@@ -73,4 +73,5 @@ public DbSet<INTELISIS.APPCORE.EL.TicketChecklist> TicketChecklist { get; set; }
 public DbSet<INTELISIS.APPCORE.EL.RespuestaChecklistCampo> RespuestaChecklistCampo { get; set; } = default!;
 
 public DbSet<INTELISIS.APPCORE.EL.ChecklistCampo> ChecklistCampo { get; set; } = default!;
+
 }
