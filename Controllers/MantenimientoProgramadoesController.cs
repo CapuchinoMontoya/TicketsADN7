@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using INTELISIS.APPCORE.EL;
 using TicketsADN7.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TicketsADN7.Controllers
 {
@@ -17,6 +18,10 @@ namespace TicketsADN7.Controllers
         // GET: MantenimientoProgramadoes
         public async Task<IActionResult> Index()
         {
+
+            ViewData["DepartamentoID"] = new SelectList(_context.Departamento, "DepartamentoID", "NombreDepartamento");
+            ViewData["CategoriaID"] = new SelectList(_context.CategoriaTicket, "CategoriaID", "Nombre");
+            ViewData["ChecklistID"] = new SelectList(_context.Checklist.ToList(), "ChecklistID", "Nombre");
             return View(await _context.MantenimientoProgramado.ToListAsync());
         }
 
@@ -49,7 +54,7 @@ namespace TicketsADN7.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Categoria,FrecuenciaDias,FechaUltimaRevision,FechaProximaRevision,Activo")] MantenimientoProgramado mantenimientoProgramado)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Categoria,Departamento,FrecuenciaDias,FechaUltimaRevision,FechaProximaRevision,Activo")] MantenimientoProgramado mantenimientoProgramado)
         {
             if (ModelState.IsValid)
             {
@@ -81,7 +86,7 @@ namespace TicketsADN7.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Categoria,FrecuenciaDias,FechaUltimaRevision,FechaProximaRevision,Activo")] MantenimientoProgramado mantenimientoProgramado)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Categoria,Departamento,FrecuenciaDias,FechaUltimaRevision,FechaProximaRevision,Activo")] MantenimientoProgramado mantenimientoProgramado)
         {
             if (id != mantenimientoProgramado.Id)
             {
@@ -152,14 +157,19 @@ namespace TicketsADN7.Controllers
         // Obtener eventos para el calendario
         public async Task<IActionResult> GetEventos()
         {
-            var eventos = await _context.MantenimientoProgramado
-                .Where(m => m.Activo)
-                .Select(m => new {
-                    title = m.Nombre + " (" + m.Categoria + ")",
-                    start = m.FechaProximaRevision.ToString("yyyy-MM-dd"),
-                    allDay = true
-                })
-                .ToListAsync();
+            var eventos = await (
+            from m in _context.MantenimientoProgramado
+            join c in _context.CategoriaTicket
+                on m.Categoria equals c.CategoriaID.ToString()
+            where m.Activo
+            select new
+            {
+                title = m.Nombre + " (" + c.Nombre + ")",
+                start = m.FechaProximaRevision.ToString("yyyy-MM-dd"),
+                allDay = true
+            }
+        ).ToListAsync();
+
 
             return Json(eventos);
         }
@@ -186,6 +196,8 @@ namespace TicketsADN7.Controllers
                             {
                                 Nombre = mantenimiento.Nombre,
                                 Categoria = mantenimiento.Categoria,
+                                Departamento = mantenimiento.Departamento,
+                                ChecklistId = mantenimiento.ChecklistId,
                                 FrecuenciaDias = mantenimiento.FrecuenciaDias,
                                 FechaProximaRevision = fechaActual,
                                 Activo = true
@@ -199,6 +211,8 @@ namespace TicketsADN7.Controllers
                             {
                                 Nombre = mantenimiento.Nombre,
                                 Categoria = mantenimiento.Categoria,
+                                Departamento = mantenimiento.Departamento,
+                                ChecklistId = mantenimiento.ChecklistId,
                                 FrecuenciaDias = mantenimiento.FrecuenciaDias,
                                 FechaProximaRevision = fechaActual.AddDays(1),
                                 Activo = true
@@ -252,9 +266,19 @@ namespace TicketsADN7.Controllers
                 string inputName = $"campo_{campo.ChecklistCampoID}";
                 string valor = null;
 
-                if ((int)campo.Tipo == 1) // Checkbox
+                if (campo.Tipo == TipoCampo.Checkbox) // Checkbox
                 {
                     valor = Request.Form[inputName].FirstOrDefault() == "on" ? "true" : "false";
+                }
+                else if (campo.Tipo == TipoCampo.Archivo)
+                {
+                    var archivo = Request.Form.Files[inputName];
+                    if (archivo != null && archivo.Length > 0)
+                    {
+                        var archivoUpload = await GuardarArchivo(archivo);
+
+                        valor = archivoUpload != "Error" ? archivoUpload : "Error";
+                    }
                 }
                 else
                 {
@@ -282,9 +306,51 @@ namespace TicketsADN7.Controllers
             await _context.SaveChangesAsync();
 
             TempData["ToastrType"] = "success";
-            TempData["ToastrMessage"] = "Checklist guardado correctamente.";
+            TempData["ToastrMessage"] = "Checklist realizado correctamente.";
 
-            return RedirectToAction("ResueltoTicket", "Tickets", new { ticketId = ticketChecklist.TicketID });
+            return RedirectToAction("ResueltoTicketChecklist", "Tickets", new { ticketId = ticketChecklist.TicketID });
+        }
+
+        /// <summary>
+        /// Metodo para guardar los archivos en el servidor
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<string> GuardarArchivo(IFormFile archivoAdjunto)
+        {
+            if (archivoAdjunto != null && archivoAdjunto.Length > 0)
+            {
+                if (archivoAdjunto.Length > 5 * 1024 * 1024)
+                {
+                    return "Error";
+                }
+
+                var extensionesPermitidas = new[] { ".pdf", ".docx", ".xlsx", ".jpg", ".jpeg", ".png" };
+                var extension = Path.GetExtension(archivoAdjunto.FileName).ToLowerInvariant();
+
+                if (string.IsNullOrEmpty(extension) || !extensionesPermitidas.Contains(extension))
+                {
+                    return "Error";
+                }
+
+                var nombreUnico =  Guid.NewGuid().ToString() + extension;
+                var rutaDirectorio = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "checklist");
+
+                if (!Directory.Exists(rutaDirectorio))
+                {
+                    Directory.CreateDirectory(rutaDirectorio);
+                }
+
+                var rutaCompleta = Path.Combine(rutaDirectorio, nombreUnico);
+                using (var stream = new FileStream(rutaCompleta, FileMode.Create))
+                {
+                    await archivoAdjunto.CopyToAsync(stream);
+                }
+
+                return rutaCompleta;
+            }
+
+            return "Error";
         }
 
     }

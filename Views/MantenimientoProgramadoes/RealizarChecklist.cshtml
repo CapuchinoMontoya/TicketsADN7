@@ -1,43 +1,89 @@
 ﻿@model INTELISIS.APPCORE.EL.TicketChecklist
 @using INTELISIS.APPCORE.EL
 
-
-<h2>Checklist: @Model.Checklist.Nombre</h2>
-<p>@Model.Checklist.Descripcion</p>
-
-<form asp-action="GuardarChecklist" method="post">
-    <input type="hidden" name="ticketChecklistId" value="@Model.TicketChecklistID" />
-
-    @foreach (var campo in Model.Checklist.Campos)
+@functions {
+    private string GetIconClass(TipoCampo tipo)
     {
-        <div class="form-group">
-            <label>@campo.NombreCampo</label>
-
-            @switch (campo.Tipo)
-            {
-                case TipoCampo.Checkbox:
-                    <input type="checkbox" name="campo_@campo.ChecklistCampoID" />
-                    break;
-                case TipoCampo.Texto:
-                    <input type="text" name="campo_@campo.ChecklistCampoID" class="form-control" required="@campo.RequiereEvidencia" />
-                    break;
-                case TipoCampo.Cantidad:
-                    <input type="number" name="campo_@campo.ChecklistCampoID" class="form-control" required="@campo.RequiereEvidencia" />
-                    break;
-                case TipoCampo.Fecha:
-                    <input type="date" name="campo_@campo.ChecklistCampoID" class="form-control" required="@campo.RequiereEvidencia" />
-                    break;
-                case TipoCampo.Archivo:
-                    <input type="file" name="campo_@campo.ChecklistCampoID" class="form-control" required="@campo.RequiereEvidencia" />
-                    break;
-            }
-
-            @if (campo.RequiereEvidencia)
-            {
-                <small class="text-danger">* Requiere evidencia</small>
-            }
-        </div>
+        return tipo switch
+        {
+            TipoCampo.Checkbox => "bi-check-square",
+            TipoCampo.Texto => "bi-card-text",
+            TipoCampo.Cantidad => "bi-123",
+            TipoCampo.Fecha => "bi-calendar-event",
+            TipoCampo.Archivo => "bi-paperclip",
+            _ => "bi-question-circle"
+        };
     }
+}
 
-    <button type="submit" class="btn btn-primary">Guardar</button>
-</form>
+<div class="container my-4">
+    <div class="card shadow border-0">
+        <div class="card-header bg-gradient bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="bi-list-check me-2"></i>Checklist: @Model.Checklist.Nombre
+            </h4>
+        </div>
+        <div class="card-body">
+            <p class="text-muted">@Model.Checklist.Descripcion</p>
+
+            <form asp-action="GuardarChecklist" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="ticketChecklistId" value="@Model.TicketChecklistID" />
+
+                <div class="row g-4">
+                    @foreach (var campo in Model.Checklist.Campos)
+                    {
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label class="form-label fw-semibold">
+                                    <i class="bi @GetIconClass(campo.Tipo) me-1 text-primary"></i>
+                                    @campo.NombreCampo
+                                    @if (campo.RequiereEvidencia)
+                                    {
+                                        <span class="text-danger">*</span>
+                                    }
+                                </label>
+
+                                @switch (campo.Tipo)
+                                {
+                                    case TipoCampo.Checkbox:
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="campo_@campo.ChecklistCampoID" id="campo_@campo.ChecklistCampoID" />
+                                            <label class="form-check-label" for="campo_@campo.ChecklistCampoID">Seleccionar</label>
+                                        </div>
+                                        break;
+
+                                    case TipoCampo.Texto:
+                                        <input type="text" name="campo_@campo.ChecklistCampoID" class="form-control" placeholder="Escribe aquí..." required="@campo.RequiereEvidencia" />
+                                        break;
+
+                                    case TipoCampo.Cantidad:
+                                        <input type="number" name="campo_@campo.ChecklistCampoID" class="form-control" placeholder="Ingresa cantidad..." required="@campo.RequiereEvidencia" />
+                                        break;
+
+                                    case TipoCampo.Fecha:
+                                        <input type="date" name="campo_@campo.ChecklistCampoID" class="form-control" required="@campo.RequiereEvidencia" />
+                                        break;
+
+                                    case TipoCampo.Archivo:
+                                        <input type="file" name="campo_@campo.ChecklistCampoID" class="form-control" required="@campo.RequiereEvidencia" />
+                                        break;
+                                }
+
+                                @if (campo.RequiereEvidencia)
+                                {
+                                    <small class="form-text text-danger">Requiere evidencia</small>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn btn-success btn-lg px-4">
+                        <i class="bi bi-save me-2"></i>Guardar Checklist
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

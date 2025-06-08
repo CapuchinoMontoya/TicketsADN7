@@ -1,41 +1,87 @@
 ﻿@model IEnumerable<INTELISIS.APPCORE.EL.Checklist>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Gestión de Checklist";
 }
 
-<h1>Index</h1>
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mt-4"><i class="fas fa-tags me-2"></i>@ViewData["Title"]</h1>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> Nuevo Checklist
+        </a>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ChecklistID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ChecklistID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ChecklistID">Delete</a>
-            </td>
-        </tr>
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0"><i class="fas fa-list-ol me-2"></i>Catálogo de Checklist</h5>
+            <div>
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent"><i class="fas fa-search"></i></span>
+                    <input type="text" id="searchInput" class="form-control border-start-0" placeholder="Buscar checklist...">
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered" id="checklistTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th class="text-center">Editar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="align-middle">
+                                    @Html.DisplayFor(modelItem => item.Nombre)
+                                </td>
+                                <td class="align-middle">
+                                    @if (!string.IsNullOrEmpty(item.Descripcion))
+                                    {
+                                        @Html.DisplayFor(modelItem => item.Descripcion)
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic">Sin descripción</span>
+                                    }
+                                </td>
+                                <td class="align-middle text-center">
+                                    <a asp-action="Edit" asp-route-id="@item.ChecklistID"
+                                       class="btn btn-outline-primary rounded-start-2" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#checklistTable').DataTable({
+                pageLength: 5,
+                lengthChange: false,
+                responsive: true,
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json'
+                },
+                dom: '<"row"<"col-sm-12 col-md-8 mb-2"><"col-sm-6 text-center"l>>' +
+                    'rt' +
+                    '<"row"<"col-sm-12 d-flex justify-content-center"p>>',
+            });
+
+            $('#searchInput').keyup(function() {
+                $('#checklistTable').DataTable().search($(this).val()).draw();
+            });
+        });
+    </script>
 }
-    </tbody>
-</table>

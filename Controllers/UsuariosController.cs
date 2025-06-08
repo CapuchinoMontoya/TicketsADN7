@@ -7,16 +7,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using INTELISIS.APPCORE.EL;
 using TicketsADN7.Models;
+using LIBRARY.COMMON.Crypto;
+using Microsoft.Extensions.Options;
 
 namespace TicketsADN7.Controllers
 {
     public class UsuariosController : Controller
     {
         private readonly TicketsContext _context;
+        private readonly string _key;
 
-        public UsuariosController(TicketsContext context)
+        public UsuariosController(TicketsContext context, IOptions<EncryptionSettings> encryptionOptions)
         {
             _context = context;
+            _key = encryptionOptions.Value.Key;
         }
         
         // GET: Usuarios
@@ -25,7 +29,7 @@ namespace TicketsADN7.Controllers
             var usuarios = await _context.Usuario
                 .Include(u => u.Departamento)
                 .Include(u => u.Rol)
-                .ToListAsync(); // Materializa aquí
+                .ToListAsync();
 
             return View(usuarios);
         }
@@ -53,8 +57,8 @@ namespace TicketsADN7.Controllers
         // GET: Usuarios/Create
         public IActionResult Create()
         {
-            ViewData["DepartamentoID"] = new SelectList(_context.Set<Departamento>(), "DepartamentoID", "Descripcion");
-            ViewData["RolID"] = new SelectList(_context.Set<Rol>(), "RolID", "Descripcion");
+            ViewData["DepartamentoID"] = new SelectList(_context.Set<Departamento>(), "DepartamentoID", "NombreDepartamento");
+            ViewData["RolID"] = new SelectList(_context.Set<Rol>(), "RolID", "NombreRol");
             return View();
         }
 
@@ -67,14 +71,39 @@ namespace TicketsADN7.Controllers
         {
             ModelState.Remove("Rol");
             ModelState.Remove("Departamento");
+
+            if (_context.Usuario.Any(u => u.NombreUsuario == usuario.NombreUsuario))
+            {
+                ModelState.AddModelError("NombreUsuario", "El nombre de usuario ya está en uso.");
+            }
+
+            if (_context.Usuario.Any(u => u.Email == usuario.Email))
+            {
+                ModelState.AddModelError("Email", "El correo electrónico ya está registrado.");
+            }
+
+            if (_context.Usuario.Any(u => u.Telefono == usuario.Telefono))
+            {
+                ModelState.AddModelError("Telefono", "El número de teléfono ya está registrado.");
+            }
+
             if (ModelState.IsValid)
             {
+                usuario.Contrasena = CryptionHelper.Encrypt(usuario.Contrasena, _key);
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
+
+                TempData["ToastrType"] = "success";
+                TempData["ToastrMessage"] = $"Usuario creado correctamente";
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartamentoID"] = new SelectList(_context.Set<Departamento>(), "DepartamentoID", "Descripcion", usuario.DepartamentoID);
-            ViewData["RolID"] = new SelectList(_context.Set<Rol>(), "RolID", "Descripcion", usuario.RolID);
+            ViewData["DepartamentoID"] = new SelectList(_context.Set<Departamento>(), "DepartamentoID", "NombreDepartamento", usuario.DepartamentoID);
+            ViewData["RolID"] = new SelectList(_context.Set<Rol>(), "RolID", "NombreRol", usuario.RolID);
+
+            TempData["ToastrType"] = "error";
+            TempData["ToastrMessage"] = $"Error el intentar registrar un nuevo usuario";
+
             return View(usuario);
         }
 
@@ -87,12 +116,13 @@ namespace TicketsADN7.Controllers
             }
 
             var usuario = await _context.Usuario.FindAsync(id);
+            usuario.Contrasena = CryptionHelper.Decrypt(usuario.Contrasena, _key);
             if (usuario == null)
             {
                 return NotFound();
             }
-            ViewData["DepartamentoID"] = new SelectList(_context.Set<Departamento>(), "DepartamentoID", "Descripcion", usuario.DepartamentoID);
-            ViewData["RolID"] = new SelectList(_context.Set<Rol>(), "RolID", "Descripcion", usuario.RolID);
+            ViewData["DepartamentoID"] = new SelectList(_context.Set<Departamento>(), "DepartamentoID", "NombreDepartamento", usuario.DepartamentoID);
+            ViewData["RolID"] = new SelectList(_context.Set<Rol>(), "RolID", "NombreRol", usuario.RolID);
             return View(usuario);
         }
 
@@ -111,12 +141,45 @@ namespace TicketsADN7.Controllers
             ModelState.Remove("Rol");
             ModelState.Remove("Departamento");
 
+            // Obtener el usuario actual antes de editar
+            var existingUser = await _context.Usuario.AsNoTracking().FirstOrDefaultAsync(u => u.UsuarioID == id);
+            if (existingUser == null)
+            {
+                return NotFound();
+            }
+
+            // Validar NombreUsuario (solo si cambió)
+            if (usuario.NombreUsuario != existingUser.NombreUsuario &&
+                _context.Usuario.Any(u => u.NombreUsuario == usuario.NombreUsuario))
+            {
+                ModelState.AddModelError("NombreUsuario", "El nombre de usuario ya está en uso.");
+            }
+
+            // Validar Email (solo si cambió)
+            if (usuario.Email != existingUser.Email &&
+                _context.Usuario.Any(u => u.Email == usuario.Email))
+            {
+                ModelState.AddModelError("Email", "El correo electrónico ya está registrado.");
+            }
+
+            // Validar Teléfono (solo si cambió y no está vacío)
+            if (!string.IsNullOrEmpty(usuario.Telefono) &&
+                usuario.Telefono != existingUser.Telefono &&
+                _context.Usuario.Any(u => u.Telefono == usuario.Telefono))
+            {
+                ModelState.AddModelError("Telefono", "El número de teléfono ya está registrado.");
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    usuario.Contrasena = CryptionHelper.Encrypt(usuario.Contrasena, _key);
                     _context.Update(usuario);
                     await _context.SaveChangesAsync();
+
+                    TempData["ToastrType"] = "success";
+                    TempData["ToastrMessage"] = $"Usuario editado correctamente";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -131,8 +194,12 @@ namespace TicketsADN7.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartamentoID"] = new SelectList(_context.Set<Departamento>(), "DepartamentoID", "Descripcion", usuario.DepartamentoID);
-            ViewData["RolID"] = new SelectList(_context.Set<Rol>(), "RolID", "Descripcion", usuario.RolID);
+            ViewData["DepartamentoID"] = new SelectList(_context.Set<Departamento>(), "DepartamentoID", "NombreDepartamento", usuario.DepartamentoID);
+            ViewData["RolID"] = new SelectList(_context.Set<Rol>(), "RolID", "NombreRol", usuario.RolID);
+
+            TempData["ToastrType"] = "error";
+            TempData["ToastrMessage"] = $"Error el intentar editar al usuario";
+
             return View(usuario);
         }
 

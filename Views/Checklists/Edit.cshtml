@@ -1,0 +1,236 @@
+﻿@using INTELISIS.APPCORE.EL
+@model INTELISIS.APPCORE.EL.Checklist
+@{
+    ViewData["Title"] = "Editar Checklist";
+    var checklistCampos = ViewData["ChecklistCampos"] as List<ChecklistCampo> ?? new List<ChecklistCampo>();
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0"><i class="fas fa-clipboard-check mr-2"></i>Editar Checklist</h2>
+        </div>
+
+        <div class="card-body">
+            <form asp-action="Edit" method="post" class="needs-validation" novalidate>
+                <input type="hidden" asp-for="ChecklistID" />
+
+                <!-- Sección de información básica -->
+                <div class="form-section mb-4 p-3 border rounded bg-light">
+                    <h4 class="text-primary mb-3"><i class="fas fa-info-circle mr-2"></i>Información Básica</h4>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">Nombre del Checklist</label>
+                        <input asp-for="Nombre" class="form-control form-control-lg" placeholder="Ingrese el nombre del checklist" required />
+                        <div class="invalid-feedback">Por favor ingrese un nombre para el checklist.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">Descripción</label>
+                        <textarea asp-for="Descripcion" class="form-control" rows="3" placeholder="Describa el propósito de este checklist"></textarea>
+                    </div>
+                </div>
+
+                <!-- Sección de campos del checklist -->
+                <div class="form-section mb-4 p-3 border rounded bg-light">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="text-primary mb-0"><i class="fas fa-list-ul mr-2"></i>Campos del Checklist</h4>
+                        <button type="button" class="btn btn-success" onclick="agregarCampo()">
+                            <i class="fas fa-plus mr-2"></i>Agregar Campo
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="camposTable">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th width="30%">Nombre</th>
+                                    <th width="25%">Tipo</th>
+                                    <th width="20%">Requiere Evidencia</th>
+                                    <th width="25%">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (var i = 0; i < checklistCampos.Count; i++)
+                                {
+                                    <tr class="align-middle">
+                                        <td>
+                                            <input name="ChecklistCampos[@i].ChecklistCampoID" type="hidden" value="@checklistCampos[i].ChecklistCampoID" />
+                                            <input name="ChecklistCampos[@i].ChecklistID" type="hidden" value="@checklistCampos[i].ChecklistID" />
+                                            <input name="ChecklistCampos[@i].NombreCampo"
+                                                   class="form-control"
+                                                   placeholder="Nombre del campo"
+                                                   value="@checklistCampos[i].NombreCampo"
+                                                   required />
+                                            <div class="invalid-feedback">Este campo es requerido</div>
+                                        </td>
+                                        <td>
+                                            <select name="ChecklistCampos[@i].Tipo" class="form-control">
+                                                <option value="1" selected="@(checklistCampos[i].Tipo == TipoCampo.Checkbox)">Checkbox</option>
+                                                <option value="2" selected="@(checklistCampos[i].Tipo == TipoCampo.Texto)">Texto</option>
+                                                <option value="3" selected="@(checklistCampos[i].Tipo == TipoCampo.Cantidad)">Cantidad</option>
+                                                <option value="4" selected="@(checklistCampos[i].Tipo == TipoCampo.Fecha)">Fecha</option>
+                                                <option value="5" selected="@(checklistCampos[i].Tipo == TipoCampo.Archivo)">Archivo</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input"
+                                                       id="evidencia-@i" name="ChecklistCampos[@i].RequiereEvidencia"
+                                                       value="true" @(checklistCampos[i].RequiereEvidencia ? "checked" : "") />
+                                                <label class="custom-control-label" for="evidencia-@i"></label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-sm"
+                                                    onclick="eliminarCampo(this)">
+                                                <i class="fas fa-trash-alt mr-1"></i>Eliminar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="form-group text-right">
+                    <a asp-action="Index" class="btn btn-outline-secondary mr-2">
+                        <i class="fas fa-times mr-2"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save mr-2"></i>Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-section {
+        transition: all 0.3s ease;
+    }
+
+        .form-section:hover {
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+    .card {
+        border-radius: 10px;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0 !important;
+    }
+
+    .table th {
+        font-weight: 600;
+    }
+
+    .btn-action {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        // Inicializamos el índice con el número de campos existentes
+        let index = @checklistCampos.Count;
+
+        function agregarCampo() {
+            const row = `
+                        <tr class="align-middle">
+                            <td>
+                                <input name="ChecklistCampos[${index}].NombreCampo"
+                                       class="form-control"
+                                       placeholder="Nombre del campo"
+                                       required />
+                                <div class="invalid-feedback">Este campo es requerido</div>
+                            </td>
+                            <td>
+                                <select name="ChecklistCampos[${index}].Tipo" class="form-control">
+                                    <option value="1">Checkbox</option>
+                                    <option value="2">Texto</option>
+                                    <option value="3">Cantidad</option>
+                                    <option value="4">Fecha</option>
+                                    <option value="5">Archivo</option>
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input"
+                                           id="evidencia-${index}" name="ChecklistCampos[${index}].RequiereEvidencia" />
+                                    <label class="custom-control-label" for="evidencia-${index}"></label>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm"
+                                        onclick="eliminarCampo(this)">
+                                    <i class="fas fa-trash-alt mr-1"></i>Eliminar
+                                </button>
+                            </td>
+                        </tr>`;
+            $("#camposTable tbody").append(row);
+
+            // Configurar el switch para la nueva fila
+            const switchInput = $(`#evidencia-${index}`);
+            const switchLabel = $(`label[for="evidencia-${index}"]`);
+            switchInput.next('.custom-control-label').attr('for', `evidencia-${index}`);
+            index++;
+        }
+
+        function eliminarCampo(button) {
+            // Mostrar confirmación antes de eliminar
+            if (confirm('¿Está seguro que desea eliminar este campo?')) {
+                $(button).closest('tr').remove();
+                // Reindexar los campos restantes
+                reindexarCampos();
+            }
+        }
+
+        function reindexarCampos() {
+            let newIndex = 0;
+            $('#camposTable tbody tr').each(function () {
+                $(this).find('input, select').each(function () {
+                    let name = $(this).attr('name');
+                    if (name) {
+                        name = name.replace(/ChecklistCampos\[\d+\]/, `ChecklistCampos[${newIndex}]`);
+                        $(this).attr('name', name);
+                    }
+                });
+
+                // Actualizar los IDs de los switches
+                const switchInput = $(this).find('.custom-control-input');
+                if (switchInput.length) {
+                    const oldId = switchInput.attr('id');
+                    const newId = oldId.replace(/\d+$/, newIndex);
+                    switchInput.attr('id', newId);
+                    $(this).find('.custom-control-label').attr('for', newId);
+                }
+
+                newIndex++;
+            });
+            index = newIndex;
+        }
+
+        // Validación de formulario
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+}

@@ -30,7 +30,8 @@ namespace TicketsADN7.Controllers
         {
             var result = await _authService.LoginAsync(model);
 
-            if(result.Usuario.Resultado != "Error"){
+            if(result.Usuario.Resultado != "Error")
+            {
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, result.Usuario.NombreUsuario),

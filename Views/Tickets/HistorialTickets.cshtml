@@ -1,95 +1,143 @@
 ﻿@model IEnumerable<INTELISIS.APPCORE.EL.Ticket>
 
 @{
-    ViewData["Title"] = "HistorialTickets";
+    ViewData["Title"] = "Historial de Tickets";
 }
 
-<h1>HistorialTickets</h1>
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mt-4"><i class="fas fa-users me-2"></i>@ViewData["Title"]</h1>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-table me-2"></i>Historial de Tickets</h5>
+                <div>
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent"><i class="fas fa-search"></i></span>
+                        <input type="text" id="searchInput" class="form-control border-start-0" placeholder="Buscar ticket...">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered" id="ticketsTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Titulo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Descripcion)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.RutaArchivo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FechaCreacion)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FechaCierre)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Categoria)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Prioridad)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Estado)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.UsuarioReporte)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.UsuarioAsignado)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Departamento)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model) {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Titulo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Descripcion)
+                                </td>
+                                <td>
+                                    @{
+                                        var ruta = item.RutaArchivo;
+                                        string nombreLimpio = "";
+                                        string rutaWeb = "#";
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Titulo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RutaArchivo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaCreacion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaCierre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Categoria)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Prioridad)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UsuarioReporte)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UsuarioAsignado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Departamento)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Titulo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RutaArchivo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaCreacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaCierre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Categoria.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Prioridad.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UsuarioReporte.Contrasena)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UsuarioAsignado.Contrasena)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Departamento.Descripcion)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.TicketID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TicketID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TicketID">Delete</a>
-            </td>
-        </tr>
+                                        if (!string.IsNullOrEmpty(ruta))
+                                        {
+                                            var archivo = System.IO.Path.GetFileName(ruta);
+                                            var indexGuion = archivo.IndexOf('-');
+                                            nombreLimpio = indexGuion >= 0 ? archivo.Substring(0, indexGuion) : archivo;
+
+                                            rutaWeb = Url.Content($"~/uploads/{archivo}");
+                                            <a href="@rutaWeb" target="_blank">
+                                                <i class="fas fa-download me-2"></i>@nombreLimpio
+                                            </a>
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FechaCreacion)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FechaCierre)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Categoria.Nombre)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Prioridad.Nombre)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Estado.Nombre)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UsuarioReporte.NombreUsuario)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UsuarioAsignado.NombreUsuario)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Departamento.NombreDepartamento)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#ticketsTable').DataTable({
+                pageLength: 5,
+                lengthChange: false,
+                responsive: true,
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/2.3.1/i18n/es-ES.json'
+                },
+                dom: '<"row"<"col-sm-12 col-md-8 mb-2"><"col-sm-6 text-center"l>>' +
+                    'rt' +
+                    '<"row"<"col-sm-12 d-flex justify-content-center"p>>',
+            });
+
+            $('#searchInput').keyup(function () {
+                $('#ticketsTable').DataTable().search($(this).val()).draw();
+            });
+        });
+    </script>
 }
-    </tbody>
-</table>

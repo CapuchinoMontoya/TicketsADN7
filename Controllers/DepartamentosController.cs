@@ -56,12 +56,21 @@ namespace TicketsADN7.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DepartamentoID,NombreDepartamento,Descripcion")] Departamento departamento)
         {
+            ModelState.Remove("Usuarios");
             if (ModelState.IsValid)
             {
                 _context.Add(departamento);
                 await _context.SaveChangesAsync();
+
+                TempData["ToastrType"] = "success";
+                TempData["ToastrMessage"] = $"Departamento registrado correctamente";
+
                 return RedirectToAction(nameof(Index));
             }
+
+            TempData["ToastrType"] = "error";
+            TempData["ToastrMessage"] = $"Error el intentar registrar un nuevo departamento";
+
             return View(departamento);
         }
 
@@ -93,12 +102,16 @@ namespace TicketsADN7.Controllers
                 return NotFound();
             }
 
+            ModelState.Remove("Usuarios");
             if (ModelState.IsValid)
             {
                 try
                 {
                     _context.Update(departamento);
                     await _context.SaveChangesAsync();
+
+                    TempData["ToastrType"] = "success";
+                    TempData["ToastrMessage"] = $"Departamento editado correctamente";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -113,6 +126,10 @@ namespace TicketsADN7.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            TempData["ToastrType"] = "error";
+            TempData["ToastrMessage"] = $"Error el intentar editar el departamento";
+
             return View(departamento);
         }
 
