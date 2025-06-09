@@ -74,4 +74,5 @@ public DbSet<INTELISIS.APPCORE.EL.RespuestaChecklistCampo> RespuestaChecklistCam
 
 public DbSet<INTELISIS.APPCORE.EL.ChecklistCampo> ChecklistCampo { get; set; } = default!;
 
+public DbSet<INTELISIS.APPCORE.EL.Equipo> Equipo { get; set; } = default!;
 }
