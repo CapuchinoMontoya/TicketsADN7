@@ -1,0 +1,73 @@
+﻿@model INTELISIS.APPCORE.EL.Equipo
+
+@{
+    ViewData["Title"] = "Detalles del Equipo";
+}
+
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mt-4"><i class="fas fa-laptop me-2 mr-3"></i>@ViewData["Title"]</h1>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Regresar
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0"><i class="fas fa-info-circle me-2 mr-1"></i>Información del equipo</h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6 mb-3">
+                    <strong>Nombre:</strong><br />
+                    @Model.Nombre
+                </div>
+                <div class="col-md-6 mb-3">
+                    <strong>Descripción:</strong><br />
+                    @Model.Descripcion
+                </div>
+                <div class="col-md-6 mb-3">
+                    <strong>Marca:</strong><br />
+                    @Model.Marca
+                </div>
+                <div class="col-md-6 mb-3">
+                    <strong>Modelo:</strong><br />
+                    @Model.Modelo
+                </div>
+                <div class="col-md-6 mb-3">
+                    <strong>Número de Serie:</strong><br />
+                    @Model.NumeroSerie
+                </div>
+                <div class="col-md-6 mb-3">
+                    <strong>Fecha de Registro:</strong><br />
+                    @Model.FechaRegistro.ToString("dd/MM/yyyy")
+                </div>
+                <div class="col-md-6 mb-3">
+                    <strong>Departamento:</strong><br />
+                    @Model.Departamento?.NombreDepartamento
+                </div>
+                <div class="col-md-6 mb-3">
+                    <strong>Usuario:</strong><br />
+                    @Model.Usuario?.NombreUsuario
+                </div>
+                <div class="col-md-6 mb-3">
+                    <strong>Código QR:</strong><br />
+                    @if (!string.IsNullOrEmpty(Model.CodigoQr))
+                    {
+                        <img src="data:image/png;base64,@Model.CodigoQr" alt="Código QR" class="img-thumbnail" style="max-width: 200px;" />
+                    }
+                    else
+                    {
+                        <span class="text-muted">No hay QR generado</span>
+                    }
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <a asp-action="Edit" asp-route-id="@Model?.EquipoID" class="btn btn-primary me-2">
+                    <i class="fas fa-edit me-1"></i> Editar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

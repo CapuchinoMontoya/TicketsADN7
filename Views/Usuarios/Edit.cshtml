@@ -99,7 +99,7 @@
                     <!-- Segunda columna -->
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <select asp-for="RolID" class="form-control" asp-items="ViewBag.RolID" required>
+                            <select asp-for="RolID" class="form-control select2" asp-items="ViewBag.RolID" required>
                                 <option value="">Seleccione un rol</option>
                             </select>
                             <label asp-for="RolID" class="form-label"></label>
@@ -107,7 +107,7 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                            <select asp-for="DepartamentoID" class="form-control" asp-items="ViewBag.DepartamentoID" required>
+                            <select asp-for="DepartamentoID" class="form-control select2" asp-items="ViewBag.DepartamentoID" required>
                                 <option value="">Seleccione un departamento</option>
                             </select>
                             <label asp-for="DepartamentoID" class="form-label"></label>

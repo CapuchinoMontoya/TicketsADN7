@@ -1,0 +1,368 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div id="content">
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Dashboard de Tickets</h1>
+            @* <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                <i class="fas fa-download fa-sm text-white-50"></i> Generar Reporte
+            </a> *@
+        </div>
+
+        <!-- Content Row -->
+        <div class="row">
+
+            <!-- Total de Tickets Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Total de Tickets
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.TotalTickets</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-ticket-alt fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tickets Abiertos Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Tickets Abiertos
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.TicketsAbiertos</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-folder-open fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tickets en Progreso Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                    Tickets en Progreso
+                                </div>
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@ViewBag.TicketsEnProgreso</div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="progress progress-sm mr-2">
+                                            <div class="progress-bar bg-info" role="progressbar"
+                                                 style="width: @ViewBag.PorcentajeEnProgreso%"
+                                                 aria-valuenow="@ViewBag.PorcentajeEnProgreso"
+                                                 aria-valuemin="0"
+                                                 aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-spinner fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tickets Cerrados Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    Tickets Cerrados
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.TicketsCerrados</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Row -->
+        <div class="row">
+            <!-- Area Chart - Tickets por Mes -->
+            <div class="col-xl-8 col-lg-7">
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Tickets por Mes</h6>
+                        <div class="dropdown no-arrow">
+                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                 aria-labelledby="dropdownMenuLink">
+                                <div class="dropdown-header">Opciones:</div>
+                                <a class="dropdown-item" href="#">Ver Detalles</a>
+                                <a class="dropdown-item" href="#">Exportar Datos</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="chart-area">
+                            <canvas id="ticketsPorMesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pie Chart - Distribución por Prioridad -->
+            <div class="col-xl-4 col-lg-5">
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Distribución por Prioridad</h6>
+                        <div class="dropdown no-arrow">
+                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                 aria-labelledby="dropdownMenuLink">
+                                <div class="dropdown-header">Opciones:</div>
+                                <a class="dropdown-item" href="#">Ver Detalles</a>
+                                <a class="dropdown-item" href="#">Exportar Datos</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="chart-pie pt-4 pb-2">
+                            <canvas id="prioridadTicketsChart"></canvas>
+                        </div>
+                        <div class="mt-4 text-center small">
+                            <span class="mr-2">
+                                <i class="fas fa-circle text-danger"></i> Alta
+                            </span>
+                            <span class="mr-2">
+                                <i class="fas fa-circle text-warning"></i> Media
+                            </span>
+                            <span class="mr-2">
+                                <i class="fas fa-circle text-primary"></i> Baja
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Row -->
+        <div class="row">
+
+            <!-- Content Column -->
+            <div class="col-lg-6 mb-4">
+
+                <!-- Tickets por Categoría -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Tickets por Categoría</h6>
+                    </div>
+                    <div class="card-body">
+                        @foreach (var categoria in ViewBag.TicketsPorCategoria)
+                        {
+                            <h4 class="small font-weight-bold">
+                                @categoria.Nombre <span class="float-right">@categoria.Porcentaje%</span>
+                            </h4>
+                            <div class="progress mb-4">
+                                <div class="progress-bar" role="progressbar" style="width: @categoria.Porcentaje%"
+                                     aria-valuenow="@categoria.Porcentaje" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Tickets por Departamento -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Tickets por Departamento</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-bar">
+                            <canvas id="ticketsPorDepartamentoChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-6 mb-4">
+
+                <!-- Últimos Tickets -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Últimos Tickets</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Título</th>
+                                        <th>Estado</th>
+                                        <th>Fecha</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var ticket in ViewBag.UltimosTickets)
+                                    {
+                                        <tr>
+                                            <td>@ticket.TicketID</td>
+                                            <td>@ticket.Titulo</td>
+                                            <td>@ticket.Estado.Nombre</td>
+                                            <td>@ticket.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tiempo Promedio de Resolución -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Estadísticas de Tiempo</h6>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="small font-weight-bold">
+                            Tiempo promedio de resolución <span class="float-right">@ViewBag.TiempoPromedioResolucion días</span>
+                        </h4>
+                        <div class="progress mb-4">
+                            <div class="progress-bar bg-info" role="progressbar"
+                                 style="width: @Math.Min(100, ViewBag.TiempoPromedioResolucion * 5)%"
+                                 aria-valuenow="@ViewBag.TiempoPromedioResolucion"
+                                 aria-valuemin="0"
+                                 aria-valuemax="20"></div>
+                        </div>
+
+                        <h4 class="small font-weight-bold">
+                            Tickets resueltos en menos de 3 días <span class="float-right">@ViewBag.TicketsRapidos%</span>
+                        </h4>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar"
+                                 style="width: @ViewBag.TicketsRapidos%"
+                                 aria-valuenow="@ViewBag.TicketsRapidos"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Gráfico de tickets por mes
+        var ctx = document.getElementById('ticketsPorMesChart');
+        var myLineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(ViewBag.Meses)),
+                datasets: [{
+                    label: "Tickets",
+                    lineTension: 0.3,
+                    backgroundColor: "rgba(78, 115, 223, 0.05)",
+                    borderColor: "rgba(78, 115, 223, 1)",
+                    pointRadius: 3,
+                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHoverRadius: 3,
+                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                    pointHitRadius: 10,
+                    pointBorderWidth: 2,
+                    data: @Html.Raw(Json.Serialize(ViewBag.TicketsPorMes)),
+                }],
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Gráfico de prioridad de tickets
+        var ctx2 = document.getElementById('prioridadTicketsChart');
+        var myPieChart = new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: @Html.Raw(Json.Serialize(ViewBag.PrioridadesLabels)),
+                datasets: [{
+                    data: @Html.Raw(Json.Serialize(ViewBag.PrioridadesData)),
+                    backgroundColor: ['#e74a3b', '#f6c23e', '#4e73df'],
+                    hoverBackgroundColor: ['#e02d1b', '#f4b30d', '#2e59d9'],
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Gráfico de tickets por departamento
+        var ctx3 = document.getElementById('ticketsPorDepartamentoChart');
+        var myBarChart = new Chart(ctx3, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(ViewBag.DepartamentosLabels)),
+                datasets: [{
+                    label: "Tickets",
+                    backgroundColor: '#4e73df',
+                    hoverBackgroundColor: '#2e59d9',
+                    borderColor: '#4e73df',
+                    data: @Html.Raw(Json.Serialize(ViewBag.DepartamentosData)),
+                }],
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}

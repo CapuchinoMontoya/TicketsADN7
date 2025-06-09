@@ -1,4 +1,5 @@
-﻿using INTELISIS.APPCORE.EL;
+﻿using DocumentFormat.OpenXml.InkML;
+using INTELISIS.APPCORE.EL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -20,7 +21,7 @@ namespace TicketsADN7.Services
             while (!stoppingToken.IsCancellationRequested)
             {
                 await GenerarTickets();
-                await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
+                await Task.Delay(TimeSpan.FromMinutes(3), stoppingToken);
 
             }
         }
@@ -35,8 +36,10 @@ namespace TicketsADN7.Services
 
                     var fechaLimite = DateTime.Today.AddDays(3);
                     var mantenimientosPendientes = await context.MantenimientoProgramado
-                        .Where(m => m.Activo && m.FechaProximaRevision <= fechaLimite)
-                        .ToListAsync();
+                    .Where(m => m.Activo &&
+                                m.FechaProximaRevision >= DateTime.Today &&
+                                m.FechaProximaRevision <= fechaLimite)
+                    .ToListAsync();
 
 
                     foreach (var mantenimiento in mantenimientosPendientes)
@@ -51,19 +54,29 @@ namespace TicketsADN7.Services
                                 Titulo = $"Mantenimiento pendiente: {mantenimiento.Nombre}",
                                 Descripcion = $"Mantenimiento programado para {mantenimiento.FechaProximaRevision:dd/MM/yyyy}",
                                 FechaCreacion = DateTime.Now,
-                                RutaArchivo = "Error",
+                                RutaArchivo = null,
                                 EstadoID = 1,
-                                CategoriaID = 1,
-                                PrioridadID = 1,
-                                UsuarioReporteID = 1,
-                                DepartamentoID = 3,
+                                CategoriaID = Convert.ToInt32(mantenimiento.Categoria),
+                                PrioridadID = 4,
+                                UsuarioReporteID = 1, //Por default el Admin
+                                DepartamentoID = Convert.ToInt32(mantenimiento.Departamento),
                             };
+                            context.Add(ticket);
+                            await context.SaveChangesAsync();
 
-                            context.Ticket.Add(ticket);
+                            if (mantenimiento.ChecklistId is not null)
+                            {
+                                var ticketChecklist = new TicketChecklist
+                                {
+                                    TicketID = ticket.TicketID,
+                                    ChecklistID = (int)mantenimiento.ChecklistId,
+                                };
+                                context.Add(ticketChecklist);
+                                await context.SaveChangesAsync();
+                            }
                         }
                     }
-
-                    await context.SaveChangesAsync();
+                    
                 }
             }
             catch (Exception ex) { 

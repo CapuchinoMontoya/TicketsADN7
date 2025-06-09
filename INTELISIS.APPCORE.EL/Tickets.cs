@@ -19,11 +19,13 @@ namespace INTELISIS.APPCORE.EL
         public string Descripcion { get; set; }
 
         [Display(Name = "Archivo")]
-        public string RutaArchivo { get; set; }
+        public string? RutaArchivo { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yy}")]
         [Display(Name = "Fecha de solicitud")]
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yy}")]
         [Display(Name = "Fecha de terminación")]
         public DateTime FechaCierre { get; set; } = DateTime.Now;
 
@@ -44,9 +46,10 @@ namespace INTELISIS.APPCORE.EL
 
         [ForeignKey("Departamento")]
         public int? DepartamentoID { get; set; }
-        
+
 
         // Propiedades de navegación
+        [Display(Name = "Categoria")]
         public virtual CategoriaTicket Categoria { get; set; }
         public virtual Prioridad Prioridad { get; set; }
 
@@ -58,6 +61,8 @@ namespace INTELISIS.APPCORE.EL
 
         [Display(Name = "Usuario Asignado")]
         public virtual Usuario UsuarioAsignado { get; set; }
+
+        [Display(Name = "Departamento")]
         public virtual Departamento Departamento { get; set; }
         public virtual TicketChecklist TicketChecklist { get; set; }
 

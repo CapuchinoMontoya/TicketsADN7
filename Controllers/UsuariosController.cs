@@ -29,7 +29,7 @@ namespace TicketsADN7.Controllers
             var usuarios = await _context.Usuario
                 .Include(u => u.Departamento)
                 .Include(u => u.Rol)
-                .ToListAsync(); // Materializa aquí
+                .ToListAsync();
 
             return View(usuarios);
         }
@@ -141,17 +141,31 @@ namespace TicketsADN7.Controllers
             ModelState.Remove("Rol");
             ModelState.Remove("Departamento");
 
-            if (_context.Usuario.Any(u => u.NombreUsuario == usuario.NombreUsuario))
+            // Obtener el usuario actual antes de editar
+            var existingUser = await _context.Usuario.AsNoTracking().FirstOrDefaultAsync(u => u.UsuarioID == id);
+            if (existingUser == null)
+            {
+                return NotFound();
+            }
+
+            // Validar NombreUsuario (solo si cambió)
+            if (usuario.NombreUsuario != existingUser.NombreUsuario &&
+                _context.Usuario.Any(u => u.NombreUsuario == usuario.NombreUsuario))
             {
                 ModelState.AddModelError("NombreUsuario", "El nombre de usuario ya está en uso.");
             }
 
-            if (_context.Usuario.Any(u => u.Email == usuario.Email))
+            // Validar Email (solo si cambió)
+            if (usuario.Email != existingUser.Email &&
+                _context.Usuario.Any(u => u.Email == usuario.Email))
             {
                 ModelState.AddModelError("Email", "El correo electrónico ya está registrado.");
             }
 
-            if (_context.Usuario.Any(u => u.Telefono == usuario.Telefono))
+            // Validar Teléfono (solo si cambió y no está vacío)
+            if (!string.IsNullOrEmpty(usuario.Telefono) &&
+                usuario.Telefono != existingUser.Telefono &&
+                _context.Usuario.Any(u => u.Telefono == usuario.Telefono))
             {
                 ModelState.AddModelError("Telefono", "El número de teléfono ya está registrado.");
             }
