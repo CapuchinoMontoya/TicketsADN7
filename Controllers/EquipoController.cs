@@ -140,11 +140,15 @@ namespace TicketsADN7.Controllers
             {
                 return NotFound();
             }
-
+            ModelState.Remove("Usuario");
+            ModelState.Remove("Departamento");
             if (ModelState.IsValid)
             {
                 try
                 {
+                    string qrContent = $"EQUIPO ID: {equipo.EquipoID}\nNombre: {equipo.Nombre}\nSerie: {equipo.NumeroSerie}";
+                    equipo.CodigoQr = _qrCodeService.GenerateQrCodeBase64(qrContent);
+
                     _context.Update(equipo);
                     await _context.SaveChangesAsync();
                 }
