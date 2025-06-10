@@ -23,10 +23,10 @@ namespace TicketsADN7.Controllers
         public async Task<IActionResult> Index()
         {
             var contexto = _context.ControlGarantias
-            .Include(r => r.Proveedor);
+            .Include(r => r.Proveedor)
+            .Include(r => r.Equipo);
 
             return View(await contexto.ToListAsync());
-            //return View(await _context.ControlGarantias.ToListAsync());
         }
 
         // GET: ControlGarantias/Details/5
@@ -51,6 +51,7 @@ namespace TicketsADN7.Controllers
         public IActionResult Create()
         {
             ViewData["ProveedorID"] = new SelectList(_context.CatalogoProveedores, "ProveedorID", "NombreProveedor");
+            ViewData["EquipoID"] = new SelectList(_context.Equipo, "EquipoID", "Nombre");
             return View();
         }
 
@@ -81,6 +82,7 @@ namespace TicketsADN7.Controllers
             }
 
             ViewData["ProveedorID"] = new SelectList(_context.CatalogoProveedores, "ProveedorID", "NombreProveedor");
+            ViewData["EquipoID"] = new SelectList(_context.Equipo, "EquipoID", "Nombre");
             return View(model);
         }
 
@@ -177,6 +179,8 @@ namespace TicketsADN7.Controllers
             }
 
             var controlGarantias = await _context.ControlGarantias
+                .Include(r => r.Proveedor)
+                     .Include(r => r.Equipo)
                 .FirstOrDefaultAsync(m => m.GarantiaID == id);
             if (controlGarantias == null)
             {

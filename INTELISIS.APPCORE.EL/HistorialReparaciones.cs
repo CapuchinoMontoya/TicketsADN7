@@ -25,9 +25,8 @@ namespace INTELISIS.APPCORE.EL
         public int ProveedorID { get; set; }
         //[ForeignKey("CatalogoProveedores")]
         public string Responsable { get; set; }
-
-
         public virtual CatalogoProveedores Proveedor { get; set; }
+        public virtual Equipo Equipo { get; set; }
 
 
     }

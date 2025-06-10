@@ -21,10 +21,10 @@ namespace TicketsADN7.Controllers
         {
 
             var contexto = _context.HistorialReparaciones
-            .Include(r => r.Proveedor); 
-           
+            .Include(r => r.Proveedor);
+
             return View(await contexto.ToListAsync());
-           // return View(await _context.HistorialReparaciones.ToListAsync());
+            // return View(await _context.HistorialReparaciones.ToListAsync());
         }
 
         // GET: HistorialReparaciones/Details/5
@@ -45,16 +45,17 @@ namespace TicketsADN7.Controllers
             return View(historialReparaciones);
         }
 
-        // GET: HistorialReparaciones/Create
+
+
+        // GET
         public IActionResult Create()
         {
             ViewData["ProveedorID"] = new SelectList(_context.CatalogoProveedores, "ProveedorID", "NombreProveedor");
+            ViewData["EquipoID"] = new SelectList(_context.Equipo, "EquipoID", "Nombre");
             return View();
         }
 
-        // POST: HistorialReparaciones/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(HistorialReparacionesEditViewModel model)
@@ -68,7 +69,7 @@ namespace TicketsADN7.Controllers
                     Area = model.Area,
                     FechaReparacion = model.FechaReparacion,
                     DescripcionProblema = model.DescripcionProblema,
-                    TrabajoRealizado =  model.TrabajoRealizado,
+                    TrabajoRealizado = model.TrabajoRealizado,
                     Costo = model.Costo,
                     ProveedorID = model.ProveedorID,
                     Responsable = model.Responsable
@@ -78,7 +79,8 @@ namespace TicketsADN7.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["ProveedorID"] = new SelectList(_context.CatalogoProveedores, "ProveedorID", "NombreProveedor");
+            ViewData["ProveedorID"] = new SelectList(_context.CatalogoProveedores, "ProveedorID", "NombreProveedor", model.ProveedorID);
+            ViewData["EquipoID"] = new SelectList(_context.Equipo, "EquipoID", "Nombre", model.EquipoID);
             return View(model);
         }
 
@@ -110,6 +112,8 @@ namespace TicketsADN7.Controllers
 
             // Preparar lista de proveedores para el dropdown
             ViewBag.ProveedorID = new SelectList(_context.CatalogoProveedores, "ProveedorID", "NombreProveedor", viewModel.ProveedorID);
+            ViewBag.EquipoID = new SelectList(_context.Equipo, "EquipoID", "Nombre", viewModel.EquipoID);
+
 
             return View(viewModel);
         }
@@ -126,6 +130,7 @@ namespace TicketsADN7.Controllers
             {
                 // Si el modelo no es válido, recargar proveedores para el dropdown
                 ViewBag.ProveedorID = new SelectList(_context.CatalogoProveedores, "ProveedorID", "NombreProveedor", model.ProveedorID);
+                ViewBag.EquipoID = new SelectList(_context.Equipo, "EquipoID", "Equipo", model.EquipoID);
                 return View(model);
             }
 
@@ -173,6 +178,8 @@ namespace TicketsADN7.Controllers
             }
 
             var historialReparaciones = await _context.HistorialReparaciones
+                  .Include(r => r.Proveedor)
+                     .Include(r => r.Equipo) 
                 .FirstOrDefaultAsync(m => m.ReparacionID == id);
             if (historialReparaciones == null)
             {

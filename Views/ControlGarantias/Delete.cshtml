@@ -72,13 +72,13 @@
 					Equipo
 				</dt>
 				<dd class="col-sm-10">
-					@Html.DisplayFor(model => model.EquipoID)
+					@Model.Equipo?.Nombre
 				</dd>
 				<dt class="col-sm-2">
 					Proveedor
 				</dt>
 				<dd class="col-sm-10">
-					@Html.DisplayFor(model => model.ProveedorID)
+					@Model.Proveedor?.NombreProveedor
 				</dd>
 				<dt class="col-sm-2">
 					Fecha de compra

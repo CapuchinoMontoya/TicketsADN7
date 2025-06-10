@@ -50,7 +50,7 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@Html.DisplayFor(modelItem => item.EquipoID)</td>
+                                <td>@(item.Equipo != null ? item.Equipo.Nombre : "")</td>
                                 <td>@(item.Proveedor != null ? item.Proveedor.NombreProveedor : "")</td>
                                 <td>@Html.DisplayFor(modelItem => item.FechaCompra)</td>
                                 <td>@Html.DisplayFor(modelItem => item.FechaInicioGarantia)</td>

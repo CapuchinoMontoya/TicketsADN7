@@ -81,4 +81,7 @@ public DbSet<INTELISIS.APPCORE.EL.HistorialReparaciones> HistorialReparaciones {
 
 public DbSet<INTELISIS.APPCORE.EL.ControlGarantias> ControlGarantias { get; set; } = default!;
 
+    public DbSet<INTELISIS.APPCORE.EL.Equipo> Equipo { get; set; } = default!;
+
+
 }

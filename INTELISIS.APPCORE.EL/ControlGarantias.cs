@@ -36,6 +36,7 @@ namespace INTELISIS.APPCORE.EL
         public string EstadoGarantia { get; set; }
         [Required(ErrorMessage = "El campo es obligatorio")]
         public CatalogoProveedores Proveedor { get; set; }
+        public Equipo Equipo { get; set; }
     }
 
     public class ControlGarantiasEditViewModel
